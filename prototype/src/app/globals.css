@@ -1,0 +1,102 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --paper: #f6f4ee;
+  --ink: #0b0b0b;
+  --storm: #1c1c1f;
+  --dune: #c8b69a;
+  --bolt: #c8201e;
+}
+
+* { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+html, body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body), system-ui, -apple-system, sans-serif;
+  font-feature-settings: "ss01", "ss03";
+  text-rendering: optimizeLegibility;
+}
+
+html {
+  scroll-behavior: auto; /* Lenis owns it */
+}
+
+/* Lenis hooks */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+::selection {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.font-display { font-family: var(--font-display); font-weight: 600; }
+.font-tag { font-family: var(--font-tag); text-transform: uppercase; letter-spacing: 0.14em; }
+.font-body { font-family: var(--font-body); }
+
+/* Hairline rules */
+.hairline { background: rgba(11,11,11,0.12); height: 1px; width: 100%; }
+.hairline-bright { background: rgba(246,244,238,0.18); height: 1px; width: 100%; }
+
+/* Grain overlay used on hero photography */
+.grain {
+  position: relative;
+}
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.25;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+/* Hide scrollbar on horizontal lookbook strips while keeping scrollability */
+.hide-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+.hide-scrollbar::-webkit-scrollbar { display: none; }
+
+/* Magnetic button base */
+.btn-storm {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.1rem 1.6rem;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-tag);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  transition: background 400ms cubic-bezier(0.25, 1, 0.5, 1), transform 400ms cubic-bezier(0.25, 1, 0.5, 1);
+}
+.btn-storm:hover { background: var(--storm); }
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.95rem 0;
+  font-family: var(--font-tag);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  border-bottom: 1px solid currentColor;
+  transition: opacity 400ms cubic-bezier(0.25, 1, 0.5, 1);
+}
+.btn-ghost:hover { opacity: 0.65; }
