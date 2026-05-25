@@ -140,27 +140,33 @@ export default function CollectionPage({ params }: Props) {
           <h3 className="font-display text-display-md tracking-[-0.03em] leading-[0.98] max-w-[18ch] mb-12">
             Other chapters
           </h3>
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-3 gap-8">
             {chapters
               .filter((c) => c.slug !== params.handle)
               .map((c) => (
                 <Link
                   key={c.slug}
                   href={`/collections/${c.slug}`}
-                  className="group block relative aspect-[4/5] overflow-hidden bg-storm/40 grain"
+                  data-cursor={c.title}
+                  className="group block"
                 >
-                  <img
-                    src={c.hero}
-                    alt={c.title}
-                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1400ms] group-hover:scale-[1.05]"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-ink/55 to-transparent" />
-                  <div className="absolute top-4 left-4 font-tag text-tag-xs text-paper">Chapter {c.number}</div>
-                  <div className="absolute bottom-5 left-5 right-5">
-                    <div className="font-display text-[34px] tracking-[-0.02em] text-paper leading-[0.95]">
-                      {c.title}
+                  <div className="relative aspect-[4/5] overflow-hidden bg-storm card-storm mb-5">
+                    <img
+                      src={c.hero}
+                      alt={c.title}
+                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1400ms] group-hover:scale-[1.05]"
+                    />
+                    <div className="absolute top-4 left-4 font-tag text-tag-xs text-paper/85">
+                      Chapter {c.number}
                     </div>
-                    <div className="font-tag text-tag-xs text-paper/70 mt-2">{c.subtitle}</div>
+                  </div>
+                  <div className="flex items-baseline justify-between gap-3">
+                    <h4 className="font-display text-[28px] md:text-[32px] tracking-[-0.025em] leading-[1.02] text-paper group-hover:text-dune transition-colors duration-500">
+                      {c.title}
+                    </h4>
+                    <span className="font-tag text-tag-xs text-paper/55 whitespace-nowrap">
+                      {c.subtitle}
+                    </span>
                   </div>
                 </Link>
               ))}

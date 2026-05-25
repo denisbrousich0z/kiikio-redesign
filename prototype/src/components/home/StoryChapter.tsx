@@ -54,11 +54,19 @@ export default function StoryChapter() {
             </div>
           </Reveal>
           <Reveal delay={3} className="mt-10 flex flex-wrap items-center gap-6">
-            <Link href="/collections/chapter-ii-lightning" className="btn-storm bg-paper text-ink hover:bg-dune">
-              Enter Chapter II
+            <Link
+              href="/collections/chapter-ii-lightning"
+              data-cursor="Read chapter II"
+              className="btn-storm"
+            >
+              Read Chapter II
               <span aria-hidden>→</span>
             </Link>
-            <Link href="#" className="font-tag text-tag-xs text-paper/65 border-b border-paper/40 pb-1 hover:text-paper">
+            <Link
+              href="#"
+              data-cursor="Full studio note"
+              className="font-tag text-tag-xs text-paper/65 border-b border-paper/40 pb-1 hover:text-paper transition-colors duration-300"
+            >
               Full studio note
             </Link>
           </Reveal>

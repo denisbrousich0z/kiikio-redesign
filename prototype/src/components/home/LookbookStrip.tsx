@@ -49,7 +49,7 @@ export default function LookbookStrip() {
         </Reveal>
       </div>
 
-      <motion.div style={{ x }} className="flex gap-6 px-gutter pr-[20vw]">
+      <motion.div style={{ x }} className="flex gap-8 px-gutter pr-[20vw]">
         {lookbook.map((item, i) => (
           <motion.div
             key={item.src + i}
@@ -59,13 +59,23 @@ export default function LookbookStrip() {
             transition={{ duration: 1.1, ease: [0.25, 1, 0.5, 1], delay: i * 0.12 }}
             data-cursor="View"
             className={[
-              "shrink-0 relative bg-storm overflow-hidden card-storm",
-              i % 2 === 0 ? "w-[62vw] md:w-[36vw] aspect-[3/4]" : "w-[80vw] md:w-[44vw] aspect-[4/3]",
+              "shrink-0",
+              i % 2 === 0 ? "w-[62vw] md:w-[36vw]" : "w-[80vw] md:w-[44vw]",
             ].join(" ")}
           >
-            <img src={item.src} alt={item.caption} className="w-full h-full object-cover" />
-            <div className="absolute bottom-3 left-3 font-tag text-tag-xs text-paper/90">{item.caption}</div>
-            <div className="absolute top-3 right-3 font-tag text-tag-xs text-paper/60">SS26 / {String(i + 1).padStart(2, "0")}</div>
+            <div
+              className={[
+                "relative bg-storm overflow-hidden card-storm",
+                i % 2 === 0 ? "aspect-[3/4]" : "aspect-[4/3]",
+              ].join(" ")}
+            >
+              <img src={item.src} alt={item.caption} className="w-full h-full object-cover" />
+            </div>
+            {/* Caption lives BELOW the image on quiet ground — no text on photos */}
+            <div className="mt-4 flex items-center justify-between font-tag text-tag-xs text-paper/70">
+              <span className="text-paper/90">{item.caption}</span>
+              <span className="text-paper/50">SS26 / {String(i + 1).padStart(2, "0")}</span>
+            </div>
           </motion.div>
         ))}
       </motion.div>

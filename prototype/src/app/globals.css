@@ -30,6 +30,84 @@ html {
   html, body, a, button, input, textarea, select, label, [role="button"] {
     cursor: none;
   }
+  /* Text fields restore the I-beam cursor so typing feels native */
+  input[type="email"], input[type="text"], input[type="search"], textarea, [contenteditable="true"] {
+    cursor: text;
+  }
+}
+
+/* ===========================================================
+   KIIKIO Cursor — flat streetwear circle, no RGB glitch.
+   =========================================================== */
+.kk-cursor-ring,
+.kk-cursor-dot,
+.kk-cursor-label {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  will-change: transform;
+}
+.kk-cursor-ring {
+  z-index: 9700;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  border: 1px solid rgba(244, 241, 234, 0.95);
+  background: transparent;
+  mix-blend-mode: difference;
+  transition: width 360ms cubic-bezier(0.25, 1, 0.5, 1),
+    height 360ms cubic-bezier(0.25, 1, 0.5, 1),
+    background-color 360ms cubic-bezier(0.25, 1, 0.5, 1),
+    border-color 360ms cubic-bezier(0.25, 1, 0.5, 1),
+    opacity 200ms cubic-bezier(0.25, 1, 0.5, 1);
+}
+.kk-cursor-ring[data-state="hovering"] {
+  width: 52px;
+  height: 52px;
+  border-color: rgba(244, 241, 234, 1);
+}
+.kk-cursor-ring[data-state="labeled"] {
+  width: 96px;
+  height: 96px;
+  background-color: rgba(244, 241, 234, 1);
+  border-color: rgba(244, 241, 234, 1);
+  mix-blend-mode: difference;
+}
+.kk-cursor-ring[data-press="1"] {
+  transform-origin: center;
+  filter: brightness(0.85);
+}
+.kk-cursor-ring[data-hidden="1"],
+.kk-cursor-dot[data-hidden="1"] {
+  opacity: 0;
+}
+.kk-cursor-dot {
+  z-index: 9750;
+  width: 4px;
+  height: 4px;
+  border-radius: 999px;
+  background: #f4f1ea;
+  mix-blend-mode: difference;
+  transition: opacity 200ms cubic-bezier(0.25, 1, 0.5, 1);
+}
+.kk-cursor-label {
+  z-index: 9760;
+  font-family: var(--font-tag), ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(244, 241, 234, 0.96);
+  mix-blend-mode: difference;
+}
+.kk-cursor-label__inner {
+  display: inline-block;
+  padding-left: 4px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .kk-cursor-ring {
+    transition: none;
+  }
 }
 
 /* Lenis hooks */
@@ -89,19 +167,24 @@ html.lenis, html.lenis body { height: auto; }
   100% { opacity: 0;   background-color: rgba(255,255,255,0); }
 }
 
-/* Magnetic button base */
+/* ===========================================================
+   KIIKIO buttons — uniform CTA system
+   =========================================================== */
 .btn-storm {
   position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 0.85rem;
-  padding: 1.15rem 1.8rem;
+  justify-content: center;
+  gap: 0.9rem;
+  min-height: 52px;
+  padding: 0 1.6rem;
   background: var(--paper);
   color: var(--ink);
   font-family: var(--font-tag);
   font-size: 11px;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
+  white-space: nowrap;
   border: 1px solid var(--paper);
   transition:
     background 400ms cubic-bezier(0.25, 1, 0.5, 1),
@@ -111,6 +194,9 @@ html.lenis, html.lenis body { height: auto; }
 .btn-storm:hover { background: transparent; color: var(--paper); }
 .btn-storm--invert { background: transparent; color: var(--paper); border-color: var(--paper); }
 .btn-storm--invert:hover { background: var(--paper); color: var(--ink); }
+.btn-storm--block { width: 100%; }
+.btn-storm--sm { min-height: 44px; padding: 0 1.2rem; font-size: 10px; letter-spacing: 0.18em; }
+.btn-storm--lg { min-height: 60px; padding: 0 2rem; font-size: 12px; letter-spacing: 0.22em; }
 
 .btn-ghost {
   display: inline-flex;
@@ -143,6 +229,81 @@ html.lenis, html.lenis body { height: auto; }
   align-items: center;
   gap: 2rem;
   padding-right: 2rem;
+}
+
+/* ===========================================================
+   AutoMarquee — autonomous CSS-driven loop.
+   =========================================================== */
+.auto-marquee {
+  position: relative;
+  overflow: hidden;
+  --marquee-duration: 32s;
+  --marquee-direction: normal;
+}
+.auto-marquee__track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+  animation: auto-marquee-slide var(--marquee-duration) linear infinite;
+  animation-direction: var(--marquee-direction);
+}
+.auto-marquee__track--mono {
+  font-family: var(--font-tag), ui-monospace, monospace;
+  text-transform: uppercase;
+}
+.auto-marquee__block {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  padding-right: 0; /* spacing lives on each item */
+}
+.auto-marquee__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding-right: 1.25rem;
+  white-space: nowrap;
+}
+.auto-marquee__divider {
+  display: inline-block;
+  color: rgba(244, 241, 234, 0.45);
+}
+@keyframes auto-marquee-slide {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .auto-marquee__track { animation-duration: 0s; }
+}
+
+/* ===========================================================
+   Studio-tier product badges
+   =========================================================== */
+.kk-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 4px 8px;
+  font-family: var(--font-tag);
+  font-size: 9.5px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  line-height: 1;
+  border: 1px solid currentColor;
+  background: transparent;
+  white-space: nowrap;
+}
+.kk-badge--edition { color: rgba(244, 241, 234, 0.85); border-color: rgba(244, 241, 234, 0.45); }
+.kk-badge--final   { color: #ffb4af; border-color: rgba(255, 42, 31, 0.6); background: rgba(255, 42, 31, 0.08); }
+.kk-badge--studio  { color: rgba(200, 182, 154, 0.95); border-color: rgba(200, 182, 154, 0.55); }
+.kk-badge--member  { color: rgba(244, 241, 234, 0.95); border-color: rgba(244, 241, 234, 0.6); background: rgba(244, 241, 234, 0.08); }
+.kk-badge--new     { color: #0a0a0a; background: #f4f1ea; border-color: #f4f1ea; }
+.kk-badge__dot {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: currentColor;
 }
 
 /* Hide scrollbar utility */

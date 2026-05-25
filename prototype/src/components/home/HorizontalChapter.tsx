@@ -9,23 +9,18 @@ import { products } from "@/lib/products";
 /**
  * Scroll-pinned horizontal showcase.
  *
- * The section becomes a sticky viewport while the user scrolls; the inner
- * track translates horizontally tied to scroll progress. Five "frames":
- *   00  Hero title slab with the wordmark
- *   01–04 Featured pieces from Chapter II (full-bleed editorial panels)
- *
- * Built so it works without scroll-jacking — Lenis already smooths the
- * native scroll, and we use a tall outer container so the inner sticky
- * canvas stays glued to viewport while progressing.
+ * Each frame splits the viewport into a clean photo column (no overlay text)
+ * and an editorial copy column on dark ground. The result: photography is
+ * uninterrupted, all typography lives off-image on a quiet surface.
  */
 export default function HorizontalChapter() {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
 
-  // Inner track moves from 0 to -(panels-1)*100vw across the section.
+  // Inner track: 5 panels total (intro + 4 frames). Travel from 0 to -80%.
   const x = useTransform(scrollYProgress, [0, 1], ["0%", "-80%"]);
 
-  const featured = products.slice(0, 4);
+  const featured = products.filter((p) => p.chapter === "II").slice(0, 4);
 
   return (
     <section
@@ -51,13 +46,15 @@ export default function HorizontalChapter() {
               </div>
               <div className="col-span-12 md:col-span-3 md:col-start-10 self-end font-tag text-tag-xs text-paper/55 leading-relaxed">
                 <div>Scroll →</div>
-                <div className="text-paper/40 mt-2">04 panels — each piece is a still from the chapter reel.</div>
+                <div className="text-paper/40 mt-2">
+                  {featured.length} panels — each piece is a still from the chapter reel.
+                </div>
               </div>
             </div>
-            <ProgressDots progress={scrollYProgress} count={5} />
+            <ProgressDots progress={scrollYProgress} count={featured.length + 1} />
           </div>
 
-          {/* Frames 1..4 — Featured pieces */}
+          {/* Frames 1..N — Featured pieces (split layout, no text on photo) */}
           {featured.map((p, i) => (
             <Frame key={p.slug} product={p} index={i + 1} />
           ))}
@@ -75,35 +72,39 @@ function Frame({
   index: number;
 }) {
   return (
-    <div className="w-screen h-full shrink-0 relative">
-      <img
-        src={product.hero}
-        alt={product.name}
-        className="absolute inset-0 w-full h-full object-cover"
-      />
-      <div className="absolute inset-0 bg-gradient-to-b from-ink/35 via-ink/10 to-ink/85" />
-      <div className="absolute inset-0 bg-gradient-to-r from-ink/70 via-transparent to-ink/45" />
+    <div className="w-screen h-full shrink-0 relative grid grid-cols-12 bg-ink">
+      {/* LEFT — clean photography column, no text overlays */}
+      <div className="col-span-12 md:col-span-7 relative h-[60svh] md:h-full bg-storm overflow-hidden">
+        <img
+          src={product.hero}
+          alt={product.name}
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        {/* Subtle bottom shade only — kept narrow so the photo reads clean */}
+        <div className="absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-ink/55 to-transparent pointer-events-none" />
+      </div>
 
-      <div className="relative h-full px-gutter flex flex-col justify-between py-24 md:py-28">
-        <div className="flex items-start justify-between font-tag text-tag-xs text-paper/75">
-          <div>
-            <div>— Frame {String(index).padStart(2, "0")}</div>
-            <div className="text-paper/50">{product.lot}</div>
+      {/* RIGHT — typographic column on quiet ground (text lives here, not on photo) */}
+      <div className="col-span-12 md:col-span-5 relative flex flex-col justify-between px-gutter py-12 md:py-16 bg-ink">
+        <div className="flex items-start justify-between font-tag text-tag-xs text-paper/65">
+          <div className="leading-relaxed">
+            <div className="text-paper/85">— Frame {String(index).padStart(2, "0")}</div>
+            <div>{product.lot}</div>
           </div>
-          <div className="text-right">
-            <div>CHAPTER {product.chapter}</div>
-            <div className="text-paper/50">{product.category.toUpperCase()}</div>
+          <div className="text-right leading-relaxed">
+            <div className="text-paper/85">Chapter {product.chapter}</div>
+            <div>{product.category.toUpperCase()}</div>
           </div>
         </div>
 
-        <div className="max-w-[28ch]">
-          <h3 className="font-display text-[88px] md:text-[140px] leading-[0.85] tracking-[-0.045em]">
+        <div className="max-w-[22ch] mt-auto">
+          <h3 className="font-display text-[clamp(56px,7.4vw,108px)] leading-[0.9] tracking-[-0.04em]">
             {product.name}
           </h3>
-          <p className="mt-6 font-body text-paper/70 text-[15px] leading-relaxed max-w-[44ch]">
+          <p className="mt-6 font-body text-paper/70 text-[15px] leading-relaxed max-w-[40ch]">
             {product.notes[0] ?? product.description.slice(0, 140)}
           </p>
-          <div className="mt-8 flex items-center gap-6">
+          <div className="mt-8 flex flex-wrap items-center gap-4">
             <Link
               href={`/products/${product.slug}`}
               data-cursor="View piece"
@@ -112,7 +113,9 @@ function Frame({
               View piece — ${product.price}
               <span aria-hidden>→</span>
             </Link>
-            <span className="font-tag text-tag-xs text-paper/55">Edition of 200</span>
+            <span className="font-tag text-tag-xs text-paper/55">
+              {product.badges?.[0]?.label ?? "Edition of 200"}
+            </span>
           </div>
         </div>
       </div>
@@ -124,27 +127,13 @@ function ProgressDots({ progress, count }: { progress: MotionValue<number>; coun
   return (
     <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-3 z-10">
       {Array.from({ length: count }).map((_, i) => (
-        <Dot key={i} progress={progress} index={i} count={count} />
+        <Dot key={i} progress={progress} start={i / count} end={(i + 1) / count} />
       ))}
     </div>
   );
 }
 
-function Dot({
-  progress,
-  index,
-  count,
-}: {
-  progress: MotionValue<number>;
-  index: number;
-  count: number;
-}) {
-  const step = 1 / (count - 1);
-  const opacity = useTransform(progress, [step * (index - 0.6), step * index, step * (index + 0.6)], [0.25, 1, 0.25]);
-  return (
-    <motion.span
-      style={{ opacity }}
-      className="block w-2 h-2 rounded-full bg-paper"
-    />
-  );
+function Dot({ progress, start, end }: { progress: MotionValue<number>; start: number; end: number }) {
+  const opacity = useTransform(progress, [start, end], [0.25, 1]);
+  return <motion.span style={{ opacity }} className="w-6 h-px bg-paper" />;
 }

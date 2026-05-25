@@ -4,19 +4,29 @@ import Chapter from "@/components/home/Chapter";
 import EditorialGrid from "@/components/home/EditorialGrid";
 import StoryChapter from "@/components/home/StoryChapter";
 import LookbookStrip from "@/components/home/LookbookStrip";
-import SectionMarquee from "@/components/ui/SectionMarquee";
+import AutoMarquee from "@/components/ui/AutoMarquee";
 
 export default function HomePage() {
   return (
     <>
       <Hero />
-      <SectionMarquee text="After the storm" speed={1.3} />
+      <AutoMarquee
+        text="KIIKIO.COM"
+        secondary="After the storm  ·  Chapter II  ·  Lightning  ·  Edition of 200  ·  Dispatching now"
+        duration={28}
+        divider="·"
+      />
       <HorizontalChapter />
-      <SectionMarquee text="Returned intact" speed={0.8} divider="⚡" />
+      <AutoMarquee text="Returned intact" duration={36} reverse divider="⚡" size="md" />
       <Chapter />
       <EditorialGrid />
       <StoryChapter />
-      <SectionMarquee text="Chapter II — Lightning" speed={1.1} divider="✦" />
+      <AutoMarquee
+        text="KIIKIO.COM"
+        secondary="Chapter II — Lightning  ·  Edition of 200  ·  Dispatching worldwide"
+        duration={32}
+        divider="·"
+      />
       <LookbookStrip />
     </>
   );

@@ -3,8 +3,6 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
-import Magnetic from "@/components/ui/Magnetic";
 import LogoMark from "@/components/ui/LogoMark";
 import { easing } from "@/lib/motion";
 
@@ -127,7 +125,7 @@ export default function Hero() {
         </motion.div>
       </motion.div>
 
-      {/* Bottom block: description + CTA + scroll indicator */}
+      {/* Bottom block: description + live status rail */}
       <motion.div
         style={{ opacity: fade }}
         className="absolute inset-x-0 bottom-0 px-gutter pb-10 md:pb-14 z-10"
@@ -137,7 +135,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, ease: easing.storm, delay: 1.0 }}
-            className="md:col-span-5 max-w-[42ch] font-body text-paper/80 text-[15px] leading-relaxed"
+            className="md:col-span-6 max-w-[44ch] font-body text-paper/85 text-[15px] md:text-[16px] leading-relaxed"
           >
             Three years ago a single hoodie lay on a workshop table the night a storm
             broke. Chapter II is the dispatch from the second strike — distressed,
@@ -148,25 +146,20 @@ export default function Hero() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, ease: easing.storm, delay: 1.2 }}
-            className="md:col-span-4 md:col-start-8 flex items-center gap-6 md:justify-end"
+            className="md:col-span-5 md:col-start-8 flex items-center gap-8 md:justify-end font-tag text-tag-xs text-paper/70"
           >
-            <Magnetic strength={0.4}>
-              <Link
-                href="/collections/chapter-ii-lightning"
-                data-cursor="Enter chapter"
-                className="btn-storm"
-              >
-                Enter Chapter II
-                <span aria-hidden>→</span>
-              </Link>
-            </Magnetic>
-            <Link
-              href="/#story"
-              data-cursor="Read"
-              className="font-tag text-tag-xs text-paper/70 hover:text-paper border-b border-paper/35 pb-1"
-            >
-              Read story
-            </Link>
+            <div className="leading-snug">
+              <div className="text-paper/45">Reading time</div>
+              <div className="text-paper">≈ 4 min</div>
+            </div>
+            <div className="leading-snug">
+              <div className="text-paper/45">Free shipping</div>
+              <div className="text-paper">Over $129</div>
+            </div>
+            <div className="leading-snug hidden lg:block">
+              <div className="text-paper/45">Returns</div>
+              <div className="text-paper">30 days</div>
+            </div>
           </motion.div>
         </div>
 
@@ -177,8 +170,9 @@ export default function Hero() {
             ACTIVE DISPATCH
           </span>
           <span className="hidden md:flex items-center gap-6">
-            <span>Free worldwide over $129</span>
-            <span>30-day returns</span>
+            <span>Edition of 200</span>
+            <span>Hand-set hardware</span>
+            <span>Studio-cut</span>
           </span>
           <motion.span
             animate={{ y: [0, 6, 0] }}
