@@ -97,14 +97,14 @@ function Frame({
           </div>
         </div>
 
-        <div className="max-w-[22ch] mt-auto">
-          <h3 className="font-display text-[clamp(56px,7.4vw,108px)] leading-[0.9] tracking-[-0.04em]">
+        <div className="mt-auto">
+          <h3 className="font-display text-[clamp(40px,4.4vw,72px)] leading-[0.95] tracking-[-0.03em] max-w-[14ch]">
             {product.name}
           </h3>
-          <p className="mt-6 font-body text-paper/70 text-[15px] leading-relaxed max-w-[40ch]">
+          <p className="mt-5 font-body text-paper/70 text-[14.5px] leading-relaxed max-w-[34ch]">
             {product.notes[0] ?? product.description.slice(0, 140)}
           </p>
-          <div className="mt-8 flex flex-wrap items-center gap-4">
+          <div className="mt-7 flex flex-wrap items-center gap-4">
             <Link
               href={`/products/${product.slug}`}
               data-cursor="View piece"

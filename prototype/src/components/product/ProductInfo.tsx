@@ -215,7 +215,7 @@ export default function ProductInfo({ product }: Props) {
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 80, opacity: 0 }}
             transition={{ duration: 0.45, ease: easing.storm }}
-            className="fixed bottom-0 inset-x-0 z-40 bg-ink/85 backdrop-blur-md border-t border-paper/10"
+            className="fixed bottom-0 inset-x-0 z-[9650] bg-ink/90 backdrop-blur-md border-t border-paper/15"
           >
             <div className="px-gutter py-3 flex items-center gap-4 md:gap-6">
               <img
