@@ -86,43 +86,44 @@ export default function CollectionPage({ params }: Props) {
       </section>
 
       {/* Filter rail */}
-      <section className="sticky top-16 md:top-20 z-30 bg-paper border-b border-ink/8">
+      <section className="sticky top-16 md:top-20 z-30 bg-ink/85 backdrop-blur-md border-b border-paper/10 text-paper">
         <div className="px-gutter h-14 flex items-center justify-between gap-6 overflow-x-auto hide-scrollbar">
           <div className="flex items-center gap-6 font-tag text-tag-xs whitespace-nowrap">
-            <span className="text-ink/55">Filter</span>
+            <span className="text-paper/55">Filter</span>
             {["All", "Tops", "Denim", "Outerwear", "Accessories"].map((f, i) => (
               <button
                 key={f}
+                data-cursor={f}
                 className={[
                   "pb-1 border-b transition-colors",
-                  i === 0 ? "border-ink text-ink" : "border-transparent text-ink/55 hover:text-ink",
+                  i === 0 ? "border-paper text-paper" : "border-transparent text-paper/55 hover:text-paper",
                 ].join(" ")}
               >
                 {f}
               </button>
             ))}
           </div>
-          <div className="flex items-center gap-6 font-tag text-tag-xs whitespace-nowrap text-ink/55">
+          <div className="flex items-center gap-6 font-tag text-tag-xs whitespace-nowrap text-paper/60">
             <span>Chapter</span>
-            <select className="bg-transparent font-tag text-tag-xs text-ink outline-none cursor-pointer">
-              <option>All chapters</option>
-              <option>I — First Storm</option>
-              <option>II — Lightning</option>
-              <option>III — Aftermath</option>
+            <select className="bg-transparent font-tag text-tag-xs text-paper outline-none cursor-pointer">
+              <option className="bg-ink text-paper">All chapters</option>
+              <option className="bg-ink text-paper">I — First Storm</option>
+              <option className="bg-ink text-paper">II — Lightning</option>
+              <option className="bg-ink text-paper">III — Aftermath</option>
             </select>
             <span>Sort</span>
-            <select className="bg-transparent font-tag text-tag-xs text-ink outline-none cursor-pointer">
-              <option>Editorial</option>
-              <option>Newest</option>
-              <option>Price ↑</option>
-              <option>Price ↓</option>
+            <select className="bg-transparent font-tag text-tag-xs text-paper outline-none cursor-pointer">
+              <option className="bg-ink text-paper">Editorial</option>
+              <option className="bg-ink text-paper">Newest</option>
+              <option className="bg-ink text-paper">Price ↑</option>
+              <option className="bg-ink text-paper">Price ↓</option>
             </select>
           </div>
         </div>
       </section>
 
       {/* Grid */}
-      <section className="bg-paper text-ink py-16 md:py-24">
+      <section className="bg-ink text-paper py-16 md:py-24">
         <div className="px-gutter">
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             {list.map((p, i) => (

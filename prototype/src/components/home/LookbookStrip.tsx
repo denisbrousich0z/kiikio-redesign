@@ -34,16 +34,16 @@ export default function LookbookStrip() {
   const x = useTransform(scrollYProgress, [0, 1], ["6%", "-12%"]);
 
   return (
-    <section ref={ref} className="bg-paper text-ink py-chapter overflow-hidden">
+    <section ref={ref} className="bg-ink text-paper py-chapter overflow-hidden">
       <div className="px-gutter mb-12 md:mb-16 grid md:grid-cols-12 items-end gap-10">
         <Reveal className="md:col-span-7">
-          <div className="font-tag text-tag-xs text-ink/55 mb-4">— Dispatch / Lookbook</div>
+          <div className="font-tag text-tag-xs text-paper/50 mb-4">— Dispatch / Lookbook</div>
           <h2 className="font-display text-display-md tracking-[-0.03em] leading-[0.98] max-w-[20ch]">
             Photographed the day the dust began to settle.
           </h2>
         </Reveal>
         <Reveal delay={1} className="md:col-span-4 md:col-start-9">
-          <p className="font-body text-ink/65 text-[15px] leading-relaxed max-w-[44ch]">
+          <p className="font-body text-paper/55 text-[15px] leading-relaxed max-w-[44ch]">
             Five frames from Chapter II. Shot on sand-set, single-source light, no retouch on the weather.
           </p>
         </Reveal>
@@ -53,28 +53,29 @@ export default function LookbookStrip() {
         {lookbook.map((item, i) => (
           <motion.div
             key={item.src + i}
-            initial={{ opacity: 0, y: 24 }}
+            initial={{ opacity: 0, y: 28 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.9, ease: [0.25, 1, 0.5, 1], delay: i * 0.1 }}
+            transition={{ duration: 1.1, ease: [0.25, 1, 0.5, 1], delay: i * 0.12 }}
+            data-cursor="View"
             className={[
-              "shrink-0 grain relative bg-storm/5",
+              "shrink-0 relative bg-storm overflow-hidden card-storm",
               i % 2 === 0 ? "w-[62vw] md:w-[36vw] aspect-[3/4]" : "w-[80vw] md:w-[44vw] aspect-[4/3]",
             ].join(" ")}
           >
             <img src={item.src} alt={item.caption} className="w-full h-full object-cover" />
-            <div className="absolute bottom-3 left-3 font-tag text-tag-xs text-paper">{item.caption}</div>
-            <div className="absolute top-3 right-3 font-tag text-tag-xs text-paper">SS26 / {String(i + 1).padStart(2, "0")}</div>
+            <div className="absolute bottom-3 left-3 font-tag text-tag-xs text-paper/90">{item.caption}</div>
+            <div className="absolute top-3 right-3 font-tag text-tag-xs text-paper/60">SS26 / {String(i + 1).padStart(2, "0")}</div>
           </motion.div>
         ))}
       </motion.div>
 
-      <div className="mt-16 border-y border-ink/12 py-5 -mx-0">
+      <div className="mt-16 border-y border-paper/10 py-5">
         <Marquee duration={42}>
-          <span className="font-display text-[44px] md:text-[64px] tracking-[-0.02em] leading-none">
+          <span className="font-display text-[52px] md:text-[72px] tracking-[-0.03em] leading-none text-paper">
             After the storm — Chapter II Lightning — Edition of 200 — Dispatching now —
           </span>
-          <span className="font-display text-[44px] md:text-[64px] italic text-dune tracking-[-0.02em] leading-none">
+          <span className="font-display text-[52px] md:text-[72px] italic text-bolt tracking-[-0.03em] leading-none">
             Kiikio
           </span>
         </Marquee>

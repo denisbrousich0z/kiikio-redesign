@@ -21,9 +21,10 @@ export default function ProductGallery({ images, alt }: Props) {
           <button
             key={src + i}
             onClick={() => setActive(i)}
+            data-cursor={`${i + 1}`}
             className={[
-              "shrink-0 w-16 h-20 md:w-20 md:h-24 overflow-hidden bg-storm/5 relative transition-opacity",
-              i === active ? "opacity-100 ring-1 ring-ink" : "opacity-55 hover:opacity-100",
+              "shrink-0 w-16 h-20 md:w-20 md:h-24 overflow-hidden bg-storm relative transition-opacity",
+              i === active ? "opacity-100 ring-1 ring-paper" : "opacity-55 hover:opacity-100",
             ].join(" ")}
             aria-label={`View image ${i + 1}`}
           >
@@ -33,7 +34,7 @@ export default function ProductGallery({ images, alt }: Props) {
       </div>
 
       {/* Main image */}
-      <div className="order-1 md:order-2 flex-1 relative aspect-[3/4] md:aspect-[4/5] bg-storm/5 overflow-hidden grain">
+      <div className="order-1 md:order-2 flex-1 relative aspect-[3/4] md:aspect-[4/5] bg-storm overflow-hidden">
         <AnimatePresence mode="wait">
           <motion.img
             key={current}
@@ -52,15 +53,17 @@ export default function ProductGallery({ images, alt }: Props) {
           {String(active + 1).padStart(2, "0")} / {String(images.length).padStart(2, "0")}
         </div>
 
-        {/* Prev / Next */}
+        {/* Prev / Next invisible click zones */}
         <button
           onClick={() => setActive((a) => (a - 1 + images.length) % images.length)}
           aria-label="Previous image"
+          data-cursor="Prev"
           className="absolute left-0 top-0 bottom-0 w-1/3 hidden md:block"
         />
         <button
           onClick={() => setActive((a) => (a + 1) % images.length)}
           aria-label="Next image"
+          data-cursor="Next"
           className="absolute right-0 top-0 bottom-0 w-1/3 hidden md:block"
         />
       </div>

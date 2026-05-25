@@ -13,27 +13,27 @@ export default function ProductInfo({ product }: Props) {
   const [color, setColor] = useState(product.colorways[0].name);
   const [size, setSize] = useState<string | null>(null);
   const [openAccordion, setOpenAccordion] = useState<string | null>("details");
-  const { add } = useCart();
+  const { add, setOpen } = useCart();
 
   function onAdd() {
-    if (!size) {
-      setSize(product.sizes[1] ?? product.sizes[0]);
-    }
+    const finalSize = size ?? product.sizes[1] ?? product.sizes[0];
+    if (!size) setSize(finalSize);
     add({
       slug: product.slug,
       name: product.name,
       price: product.price,
-      size: size ?? product.sizes[1] ?? product.sizes[0],
+      size: finalSize,
       color,
       image: product.hero,
       qty: 1,
     });
+    setOpen(true);
   }
 
   return (
-    <div className="flex flex-col gap-7 md:gap-9 md:sticky md:top-28 md:self-start">
+    <div className="flex flex-col gap-7 md:gap-9 md:sticky md:top-28 md:self-start text-paper">
       <div>
-        <div className="font-tag text-tag-xs text-ink/55 mb-3">
+        <div className="font-tag text-tag-xs text-paper/55 mb-3">
           Chapter {product.chapter} · {product.lot} · Edition of 200
         </div>
         <h1 className="font-display text-display-md tracking-[-0.03em] leading-[1.02] max-w-[18ch]">
@@ -42,15 +42,15 @@ export default function ProductInfo({ product }: Props) {
         <div className="mt-4 font-tag text-tag-sm">${product.price}</div>
       </div>
 
-      <p className="font-body text-ink/75 text-[15.5px] leading-relaxed max-w-[48ch]">
+      <p className="font-body text-paper/75 text-[15.5px] leading-relaxed max-w-[48ch]">
         {product.description}
       </p>
 
       {/* Colorways */}
       <div>
         <div className="flex items-center justify-between mb-3">
-          <span className="font-tag text-tag-xs text-ink/55">Colorway</span>
-          <span className="font-tag text-tag-xs">{color}</span>
+          <span className="font-tag text-tag-xs text-paper/55">Colorway</span>
+          <span className="font-tag text-tag-xs text-paper">{color}</span>
         </div>
         <div className="flex items-center gap-3">
           {product.colorways.map((c) => (
@@ -58,9 +58,12 @@ export default function ProductInfo({ product }: Props) {
               key={c.name}
               onClick={() => setColor(c.name)}
               aria-label={c.name}
+              data-cursor={c.name}
               className={[
                 "relative w-9 h-9 rounded-full transition-transform",
-                color === c.name ? "scale-100 ring-1 ring-ink ring-offset-2 ring-offset-paper" : "scale-90 opacity-70 hover:opacity-100",
+                color === c.name
+                  ? "scale-100 ring-1 ring-paper ring-offset-2 ring-offset-ink"
+                  : "scale-90 opacity-70 hover:opacity-100",
               ].join(" ")}
               style={{ background: c.hex }}
             />
@@ -71,8 +74,8 @@ export default function ProductInfo({ product }: Props) {
       {/* Sizes */}
       <div>
         <div className="flex items-center justify-between mb-3">
-          <span className="font-tag text-tag-xs text-ink/55">Size</span>
-          <button className="font-tag text-tag-xs underline-offset-4 hover:underline text-ink/55">
+          <span className="font-tag text-tag-xs text-paper/55">Size</span>
+          <button className="font-tag text-tag-xs underline-offset-4 hover:underline text-paper/55">
             Size guide
           </button>
         </div>
@@ -81,11 +84,12 @@ export default function ProductInfo({ product }: Props) {
             <button
               key={s}
               onClick={() => setSize(s)}
+              data-cursor={s}
               className={[
                 "h-12 font-tag text-tag-sm border transition-colors",
                 size === s
-                  ? "border-ink bg-ink text-paper"
-                  : "border-ink/15 bg-transparent text-ink hover:border-ink/55",
+                  ? "border-paper bg-paper text-ink"
+                  : "border-paper/20 bg-transparent text-paper hover:border-paper/60",
               ].join(" ")}
             >
               {s}
@@ -97,18 +101,18 @@ export default function ProductInfo({ product }: Props) {
       {/* Add to bag */}
       <div className="flex flex-col gap-3 pt-2">
         <Magnetic strength={0.18}>
-          <button onClick={onAdd} className="btn-storm w-full justify-between">
+          <button onClick={onAdd} data-cursor="Add to bag" className="btn-storm w-full justify-between">
             Add to bag — ${product.price}
             <span aria-hidden>→</span>
           </button>
         </Magnetic>
-        <div className="font-tag text-tag-xs text-ink/55 text-center">
+        <div className="font-tag text-tag-xs text-paper/55 text-center">
           Worldwide shipping — free over $129 · 30-day returns
         </div>
       </div>
 
       {/* Accordion */}
-      <div className="divide-y divide-ink/10 border-y border-ink/10">
+      <div className="divide-y divide-paper/10 border-y border-paper/10">
         {[
           { id: "details", label: "Details & materials", body: product.notes.map((n) => <li key={n}>{n}</li>) },
           {
@@ -137,10 +141,11 @@ export default function ProductInfo({ product }: Props) {
             <div key={row.id}>
               <button
                 onClick={() => setOpenAccordion(open ? null : row.id)}
-                className="w-full py-5 flex items-center justify-between font-tag text-tag-sm text-left"
+                data-cursor={open ? "Close" : "Open"}
+                className="w-full py-5 flex items-center justify-between font-tag text-tag-sm text-left text-paper"
               >
                 <span>{row.label}</span>
-                <span aria-hidden className="text-ink/55">{open ? "—" : "+"}</span>
+                <span aria-hidden className="text-paper/55">{open ? "—" : "+"}</span>
               </button>
               <AnimatePresence initial={false}>
                 {open && (
@@ -151,7 +156,7 @@ export default function ProductInfo({ product }: Props) {
                     transition={{ duration: 0.5, ease: easing.storm }}
                     className="overflow-hidden"
                   >
-                    <div className="pb-6 font-body text-ink/75 text-[14.5px] leading-relaxed space-y-3">
+                    <div className="pb-6 font-body text-paper/70 text-[14.5px] leading-relaxed space-y-3">
                       {Array.isArray(row.body) ? <ul className="list-disc pl-5 space-y-1">{row.body}</ul> : row.body}
                     </div>
                   </motion.div>

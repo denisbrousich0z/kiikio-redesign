@@ -1,32 +1,34 @@
 import Link from "next/link";
+import LogoMark from "@/components/ui/LogoMark";
 
 export default function Footer() {
   return (
-    <footer className="bg-ink text-paper">
+    <footer className="bg-ink text-paper border-t border-paper/10">
       <div className="px-gutter py-chapter">
         {/* Top: wordmark + tagline */}
         <div className="grid md:grid-cols-12 gap-10">
           <div className="md:col-span-7">
             <div className="font-tag text-tag-xs text-paper/60 mb-6">— After the storm</div>
-            <h2 className="font-display text-display-lg leading-[0.95] tracking-[-0.03em]">
-              Kiikio
-              <br />
-              <em className="not-italic text-dune">Chapter II — Lightning.</em>
-            </h2>
+            <Link href="/" aria-label="Kiikio" data-cursor="Home" className="block max-w-[680px]">
+              <LogoMark variant="white" layout="block" glitchOnIdle alt="Kiikio" className="opacity-95" />
+            </Link>
+            <div className="mt-6 font-display italic text-dune text-[24px] md:text-[32px] leading-tight">
+              Chapter II — Lightning.
+            </div>
           </div>
 
           <div className="md:col-span-5 grid grid-cols-2 gap-x-8 gap-y-4 self-end font-tag text-tag-xs text-paper/70">
             <div className="space-y-2">
               <div className="text-paper/40">Shop</div>
-              <Link href="/collections/chapter-ii-lightning" className="block hover:text-paper">Chapter II</Link>
-              <Link href="/collections/catalog" className="block hover:text-paper">Catalog</Link>
-              <Link href="/collections/archive" className="block hover:text-paper">Archive</Link>
+              <Link href="/collections/chapter-ii-lightning" data-cursor="Chapter II" className="block hover:text-paper">Chapter II</Link>
+              <Link href="/collections/catalog" data-cursor="Catalog" className="block hover:text-paper">Catalog</Link>
+              <Link href="/collections/archive" data-cursor="Archive" className="block hover:text-paper">Archive</Link>
             </div>
             <div className="space-y-2">
               <div className="text-paper/40">Studio</div>
-              <Link href="/#story" className="block hover:text-paper">Story</Link>
-              <Link href="#" className="block hover:text-paper">Dispatch</Link>
-              <Link href="#" className="block hover:text-paper">Contact</Link>
+              <Link href="/#story" data-cursor="Story" className="block hover:text-paper">Story</Link>
+              <Link href="#" data-cursor="Dispatch" className="block hover:text-paper">Dispatch</Link>
+              <Link href="#" data-cursor="Contact" className="block hover:text-paper">Contact</Link>
             </div>
           </div>
         </div>
@@ -45,7 +47,7 @@ export default function Footer() {
                 placeholder="your@email"
                 className="bg-transparent flex-1 py-3 font-body text-base outline-none placeholder:text-paper/40"
               />
-              <button className="font-tag text-tag-xs py-3 px-2 hover:text-dune transition-colors">
+              <button data-cursor="Send" className="font-tag text-tag-xs py-3 px-2 hover:text-dune transition-colors">
                 Send →
               </button>
             </div>
@@ -72,9 +74,9 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 font-tag text-tag-xs text-paper/40">
           <div>© Kiikio Studios 2026 — All chapters reserved.</div>
           <div className="flex gap-6">
-            <Link href="#">Instagram</Link>
-            <Link href="#">TikTok</Link>
-            <Link href="#">Pinterest</Link>
+            <Link href="#" data-cursor="Instagram">Instagram</Link>
+            <Link href="#" data-cursor="TikTok">TikTok</Link>
+            <Link href="#" data-cursor="Pinterest">Pinterest</Link>
           </div>
         </div>
       </div>

@@ -6,6 +6,10 @@ import Footer from "@/components/Footer";
 import SmoothScroll from "@/components/SmoothScroll";
 import CartProvider from "@/components/CartProvider";
 import CartDrawer from "@/components/CartDrawer";
+import CustomCursor from "@/components/ui/CustomCursor";
+import BrandRail from "@/components/ui/BrandRail";
+import LightningFlash from "@/components/ui/LightningFlash";
+import LogoFilters from "@/components/ui/LogoFilters";
 
 const display = Fraunces({
   subsets: ["latin"],
@@ -38,13 +42,17 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${display.variable} ${body.variable} ${tag.variable}`}>
-      <body className="bg-paper text-ink font-body antialiased">
+      <body className="bg-ink text-paper font-body antialiased world-grain overflow-x-hidden">
         <CartProvider>
+          <LogoFilters />
           <SmoothScroll />
+          <BrandRail />
           <Header />
-          <main className="min-h-screen">{children}</main>
+          <main className="min-h-screen md:pl-rail">{children}</main>
           <Footer />
           <CartDrawer />
+          <LightningFlash />
+          <CustomCursor />
         </CartProvider>
       </body>
     </html>
