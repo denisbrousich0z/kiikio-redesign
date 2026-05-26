@@ -7,10 +7,11 @@ import { useCart } from "@/components/CartProvider";
 import FullscreenMenu from "@/components/ui/FullscreenMenu";
 
 /**
- * Header is now intentionally minimal — the brand wordmark lives in
- * the vertical BrandRail. The header only carries a live clock,
- * dispatch counter, MENU button (which opens the full-screen overlay),
- * and BAG button.
+ * Header is now intentionally minimal — on desktop the primary nav
+ * lives in SideNav (top-left) and the wordmark lives in BrandRail,
+ * so the header only carries Search + Bag on the right. On mobile,
+ * the hamburger MENU button opens the FullscreenMenu drawer because
+ * the SideNav is hidden.
  */
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
@@ -57,12 +58,13 @@ export default function Header() {
                 {count}
               </span>
             </button>
+            {/* Mobile-only menu trigger — on desktop the SideNav is permanent. */}
             <button
               type="button"
               aria-label={menuOpen ? "Close menu" : "Open menu"}
               onClick={() => setMenuOpen((v) => !v)}
               data-cursor={menuOpen ? "Close" : "Open"}
-              className="font-tag text-tag-xs uppercase tracking-[0.18em] inline-flex items-center gap-2 text-paper hover:text-paper/85"
+              className="md:hidden font-tag text-tag-xs uppercase tracking-[0.18em] inline-flex items-center gap-2 text-paper hover:text-paper/85"
             >
               <span>{menuOpen ? "Close" : "Menu"}</span>
               <span className="flex flex-col gap-1.5">

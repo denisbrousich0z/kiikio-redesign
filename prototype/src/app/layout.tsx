@@ -8,6 +8,7 @@ import CartProvider from "@/components/CartProvider";
 import CartDrawer from "@/components/CartDrawer";
 import CustomCursor from "@/components/ui/CustomCursor";
 import BrandRail from "@/components/ui/BrandRail";
+import SideNav from "@/components/ui/SideNav";
 
 const display = Fraunces({
   subsets: ["latin"],
@@ -44,6 +45,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <CartProvider>
           <SmoothScroll />
           <BrandRail />
+          <SideNav />
           <Header />
           <main className="min-h-screen md:pl-rail">{children}</main>
           <Footer />
