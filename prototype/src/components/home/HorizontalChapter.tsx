@@ -98,7 +98,7 @@ function Frame({
         </div>
 
         <div className="mt-auto">
-          <h3 className="font-display text-[clamp(40px,4.4vw,72px)] leading-[0.95] tracking-[-0.03em] max-w-[14ch]">
+          <h3 className="font-display text-[clamp(28px,3.2vw,52px)] leading-[1.02] tracking-[-0.025em] max-w-[14ch]">
             {product.name}
           </h3>
           <p className="mt-5 font-body text-paper/70 text-[14.5px] leading-relaxed max-w-[34ch]">

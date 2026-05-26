@@ -6,10 +6,8 @@ import LogoMark from "@/components/ui/LogoMark";
 /**
  * Vertical brand rail — fixed to the left edge.
  *
- * - Top: ® index card (live dispatch number)
- * - Middle: KIIKIO® wordmark rotated -90deg so it reads bottom-to-top.
- *   Hover triggers RGB-slice glitch. Idle pulse fires every 4–10s.
- * - Bottom: chapter marker
+ * Quiet vertical strip carrying the index card, a rotated wordmark, and
+ * the chapter marker. The wordmark is rendered flat (no RGB glitch).
  */
 export default function BrandRail() {
   return (
@@ -32,11 +30,10 @@ export default function BrandRail() {
           <LogoMark
             variant="white"
             layout="inline"
-            glitchOnIdle
             alt="Kiikio"
-            width={170}
-            height={36}
-            className="opacity-90"
+            width={140}
+            height={28}
+            className="opacity-80"
           />
         </span>
       </Link>

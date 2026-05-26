@@ -68,7 +68,7 @@ export default function Chapter() {
 
                 {/* Title and meta live BELOW the image on clean ground */}
                 <div className="flex items-baseline justify-between gap-4">
-                  <h3 className="font-display text-[28px] md:text-[36px] tracking-[-0.03em] leading-[1.02] text-paper group-hover:text-dune transition-colors duration-500 ease-[cubic-bezier(0.25,1,0.5,1)]">
+                  <h3 className="font-display text-[22px] md:text-[28px] tracking-[-0.025em] leading-[1.05] text-paper group-hover:text-dune transition-colors duration-500 ease-[cubic-bezier(0.25,1,0.5,1)]">
                     {c.title}
                   </h3>
                   <span className="font-tag text-tag-xs text-paper/55 whitespace-nowrap">

@@ -27,7 +27,7 @@ export default function EditorialGrid() {
         <div className="grid md:grid-cols-12 gap-10 items-end mb-12 md:mb-16">
           <Reveal className="md:col-span-7">
             <div className="font-tag text-tag-xs text-paper/50 mb-3">— Dispatch / Catalog</div>
-            <h2 className="font-display text-display-md tracking-[-0.025em] leading-[0.98] max-w-[16ch]">
+            <h2 className="font-display text-display-md tracking-[-0.022em] leading-[1.02] max-w-[18ch]">
               Pieces returned from the second storm.
             </h2>
           </Reveal>

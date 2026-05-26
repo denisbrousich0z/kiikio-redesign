@@ -49,7 +49,7 @@ export default function ProductInfo({ product }: Props) {
           <div className="font-tag text-tag-xs text-paper/55 mb-3">
             Chapter {product.chapter} · {product.lot}
           </div>
-          <h1 className="font-display text-display-md tracking-[-0.025em] leading-[1.02] max-w-[18ch]">
+          <h1 className="font-display text-display-md tracking-[-0.022em] leading-[1.04] max-w-[18ch]">
             {product.name}
           </h1>
 
@@ -66,7 +66,7 @@ export default function ProductInfo({ product }: Props) {
 
           {/* Price block */}
           <div className="mt-6 flex items-baseline gap-4">
-            <span className="font-display text-[28px] md:text-[32px] tracking-[-0.02em]">
+            <span className="font-display text-[22px] md:text-[26px] tracking-[-0.015em]">
               ${product.price}
             </span>
             {hasMember && (
@@ -95,10 +95,12 @@ export default function ProductInfo({ product }: Props) {
                 aria-label={c.name}
                 data-cursor={c.name}
                 className={[
-                  "relative w-9 h-9 rounded-full transition-transform",
+                  "relative w-9 h-9 rounded-full transition-all duration-300 ease-[cubic-bezier(0.25,1,0.5,1)]",
+                  // Hairline ring keeps dark colorways visible against the dark ground.
+                  "border border-paper/35",
                   color === c.name
-                    ? "scale-100 ring-1 ring-paper ring-offset-2 ring-offset-ink"
-                    : "scale-90 opacity-70 hover:opacity-100",
+                    ? "scale-100 ring-1 ring-paper ring-offset-2 ring-offset-ink border-transparent"
+                    : "scale-95 opacity-90 hover:opacity-100 hover:border-paper/60",
                 ].join(" ")}
                 style={{ background: c.hex }}
               />

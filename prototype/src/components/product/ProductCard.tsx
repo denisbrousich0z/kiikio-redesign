@@ -73,7 +73,7 @@ export default function ProductCard({ product, index = 0, priority }: Props) {
 
         {/* Type block sits BELOW the photo on clean ground */}
         <div className="mt-4 flex items-baseline justify-between gap-3">
-          <h3 className="font-display text-[20px] md:text-[22px] tracking-[-0.01em] leading-[1.05] text-paper">
+          <h3 className="font-display text-[17px] md:text-[19px] tracking-[-0.01em] leading-[1.1] text-paper">
             {product.name}
           </h3>
           <PricePair price={product.price} member={product.memberPrice} />

@@ -37,10 +37,9 @@ html {
 }
 
 /* ===========================================================
-   KIIKIO Cursor — flat streetwear circle, no RGB glitch.
+   KIIKIO Cursor — minimalist crosshair, no circle, no RGB.
    =========================================================== */
-.kk-cursor-ring,
-.kk-cursor-dot,
+.kk-cursor,
 .kk-cursor-label {
   position: fixed;
   top: 0;
@@ -48,64 +47,98 @@ html {
   pointer-events: none;
   will-change: transform;
 }
-.kk-cursor-ring {
+.kk-cursor {
   z-index: 9700;
-  width: 28px;
-  height: 28px;
-  border-radius: 999px;
-  border: 1px solid rgba(244, 241, 234, 0.95);
-  background: transparent;
+  width: 16px;
+  height: 16px;
   mix-blend-mode: difference;
-  transition: width 360ms cubic-bezier(0.25, 1, 0.5, 1),
-    height 360ms cubic-bezier(0.25, 1, 0.5, 1),
-    background-color 360ms cubic-bezier(0.25, 1, 0.5, 1),
-    border-color 360ms cubic-bezier(0.25, 1, 0.5, 1),
+  transition: transform 200ms cubic-bezier(0.25, 1, 0.5, 1),
     opacity 200ms cubic-bezier(0.25, 1, 0.5, 1);
 }
-.kk-cursor-ring[data-state="hovering"] {
-  width: 52px;
-  height: 52px;
-  border-color: rgba(244, 241, 234, 1);
+.kk-cursor__line {
+  position: absolute;
+  background: #f4f1ea;
+  transition: width 300ms cubic-bezier(0.25, 1, 0.5, 1),
+    height 300ms cubic-bezier(0.25, 1, 0.5, 1),
+    transform 300ms cubic-bezier(0.25, 1, 0.5, 1),
+    opacity 200ms cubic-bezier(0.25, 1, 0.5, 1);
 }
-.kk-cursor-ring[data-state="labeled"] {
-  width: 96px;
-  height: 96px;
-  background-color: rgba(244, 241, 234, 1);
-  border-color: rgba(244, 241, 234, 1);
-  mix-blend-mode: difference;
+.kk-cursor__line--h {
+  top: 50%;
+  left: 50%;
+  width: 14px;
+  height: 1px;
+  transform: translate(-50%, -50%);
 }
-.kk-cursor-ring[data-press="1"] {
-  transform-origin: center;
-  filter: brightness(0.85);
+.kk-cursor__line--v {
+  top: 50%;
+  left: 50%;
+  width: 1px;
+  height: 14px;
+  transform: translate(-50%, -50%);
 }
-.kk-cursor-ring[data-hidden="1"],
-.kk-cursor-dot[data-hidden="1"] {
-  opacity: 0;
-}
-.kk-cursor-dot {
-  z-index: 9750;
-  width: 4px;
-  height: 4px;
+.kk-cursor__dot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 3px;
+  height: 3px;
   border-radius: 999px;
   background: #f4f1ea;
-  mix-blend-mode: difference;
-  transition: opacity 200ms cubic-bezier(0.25, 1, 0.5, 1);
+  transform: translate(-50%, -50%) scale(0);
+  transform-origin: center;
+  transition: transform 260ms cubic-bezier(0.25, 1, 0.5, 1);
+}
+.kk-cursor[data-state="hovering"] .kk-cursor__line--h {
+  width: 22px;
+}
+.kk-cursor[data-state="hovering"] .kk-cursor__line--v {
+  height: 22px;
+}
+.kk-cursor[data-state="hovering"] .kk-cursor__dot {
+  transform: translate(-50%, -50%) scale(1);
+}
+.kk-cursor[data-state="labeled"] .kk-cursor__line--h {
+  width: 24px;
+}
+.kk-cursor[data-state="labeled"] .kk-cursor__line--v {
+  height: 24px;
+}
+.kk-cursor[data-state="labeled"] .kk-cursor__dot {
+  transform: translate(-50%, -50%) scale(1.6);
+}
+.kk-cursor[data-press="1"] .kk-cursor__line--h,
+.kk-cursor[data-press="1"] .kk-cursor__line--v {
+  opacity: 0.7;
+}
+.kk-cursor[data-press="1"] .kk-cursor__dot {
+  transform: translate(-50%, -50%) scale(1.2);
+}
+.kk-cursor[data-hidden="1"] {
+  opacity: 0;
 }
 .kk-cursor-label {
   z-index: 9760;
+  padding: 4px 8px;
   font-family: var(--font-tag), ui-monospace, monospace;
   font-size: 10px;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: rgba(244, 241, 234, 0.96);
-  mix-blend-mode: difference;
+  color: #0a0a0a;
+  background: #f4f1ea;
+  white-space: nowrap;
+  opacity: 0;
+  transform-origin: top left;
+  transition: opacity 220ms cubic-bezier(0.25, 1, 0.5, 1);
 }
-.kk-cursor-label__inner {
-  display: inline-block;
-  padding-left: 4px;
+.kk-cursor-label[data-visible="1"] {
+  opacity: 1;
 }
 @media (prefers-reduced-motion: reduce) {
-  .kk-cursor-ring {
+  .kk-cursor,
+  .kk-cursor__line,
+  .kk-cursor__dot,
+  .kk-cursor-label {
     transition: none;
   }
 }
@@ -260,12 +293,13 @@ html.lenis, html.lenis body { height: auto; }
 .auto-marquee__item {
   display: inline-flex;
   align-items: center;
-  gap: 1.25rem;
-  padding-right: 1.25rem;
+  gap: 1rem;
+  padding-right: 1rem;
   white-space: nowrap;
 }
 .auto-marquee__divider {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
   color: rgba(244, 241, 234, 0.45);
 }
 @keyframes auto-marquee-slide {
@@ -366,10 +400,9 @@ html.lenis, html.lenis body { height: auto; }
 .card-storm:hover::after { opacity: 1; }
 
 /* ===========================================================
-   KIIKIO GLITCH LOGO
-   Renders three copies of the wordmark: base + two displaced
-   layers (red & cyan/blue) that get clipped into horizontal
-   slices for an RGB-split CRT-glitch effect.
+   KIIKIO LOGO
+   The wordmark renders as a single clean PNG — no RGB-split,
+   no scanlines. Class hooks below are kept for layout only.
    =========================================================== */
 .logo-mark {
   display: inline-block;
@@ -379,99 +412,16 @@ html.lenis, html.lenis body { height: auto; }
 }
 .logo-mark .logo-base {
   position: relative;
-  z-index: 2;
   display: block;
-}
-.logo-mark .logo-layer {
-  position: absolute;
-  inset: 0;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
-  mix-blend-mode: screen;
-  opacity: 0;
-  transition: opacity 400ms cubic-bezier(0.25, 1, 0.5, 1),
-              transform 400ms cubic-bezier(0.25, 1, 0.5, 1);
-  pointer-events: none;
-  z-index: 1;
-}
-.logo-mark .logo-layer-r {
-  filter: url(#kiikio-tint-bolt) drop-shadow(0 0 0 #ff2a1f);
-  background-color: transparent;
-  /* fallback if filter unsupported: tint via mask not possible cross-browser w/o SVG.
-     We rely on the SVG filter in the layout. */
-}
-.logo-mark .logo-layer-b {
-  filter: url(#kiikio-tint-dune);
-}
-.logo-mark .logo-scan {
-  position: absolute;
-  inset: 0;
-  z-index: 3;
-  pointer-events: none;
-  opacity: 0;
-  background: repeating-linear-gradient(
-    180deg,
-    rgba(0,0,0,0) 0px,
-    rgba(0,0,0,0) 4px,
-    rgba(0,0,0,0.18) 4px,
-    rgba(0,0,0,0.18) 5px
-  );
-  mix-blend-mode: multiply;
-  transition: opacity 300ms cubic-bezier(0.25, 1, 0.5, 1);
-}
-.logo-mark:hover .logo-layer,
-.logo-mark.logo-pulse .logo-layer {
-  opacity: 0.85;
-}
-.logo-mark:hover .logo-layer-r,
-.logo-mark.logo-pulse .logo-layer-r {
-  transform: translate(-3px, 0);
-  animation: logo-slice-r 700ms steps(8) 1;
-}
-.logo-mark:hover .logo-layer-b,
-.logo-mark.logo-pulse .logo-layer-b {
-  transform: translate(3px, 0);
-  animation: logo-slice-b 700ms steps(8) 1;
-}
-.logo-mark:hover .logo-scan,
-.logo-mark.logo-pulse .logo-scan {
-  opacity: 0.55;
-}
-
-@keyframes logo-slice-r {
-  0%   { clip-path: inset(0 0 80% 0); transform: translate(-4px, 0); }
-  20%  { clip-path: inset(40% 0 50% 0); transform: translate(-6px, 0); }
-  40%  { clip-path: inset(60% 0 20% 0); transform: translate(-3px, 0); }
-  60%  { clip-path: inset(20% 0 70% 0); transform: translate(-5px, 0); }
-  80%  { clip-path: inset(80% 0 5% 0); transform: translate(-2px, 0); }
-  100% { clip-path: inset(0 0 100% 0); transform: translate(-3px, 0); }
-}
-@keyframes logo-slice-b {
-  0%   { clip-path: inset(70% 0 10% 0); transform: translate(4px, 0); }
-  20%  { clip-path: inset(20% 0 60% 0); transform: translate(2px, 0); }
-  40%  { clip-path: inset(50% 0 30% 0); transform: translate(6px, 0); }
-  60%  { clip-path: inset(10% 0 80% 0); transform: translate(3px, 0); }
-  80%  { clip-path: inset(85% 0 0 0); transform: translate(5px, 0); }
-  100% { clip-path: inset(100% 0 0 0); transform: translate(3px, 0); }
 }
 
 /* Vertical orientation for brand rail */
 .logo-mark.is-vertical {
   writing-mode: vertical-rl;
-  transform: rotate(180deg);
-}
-
-/* Massive hero display variant */
-.logo-mark.is-hero {
-  width: 100%;
-  filter: drop-shadow(0 12px 60px rgba(255, 42, 31, 0.25));
 }
 
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
-  .logo-mark:hover .logo-layer,
-  .logo-mark.logo-pulse .logo-layer { animation: none; transform: none; }
   .world-grain::before { animation: none; }
   .lightning-flash.is-strike { animation-duration: 0.6s; }
 }

@@ -26,7 +26,7 @@ export default function StoryChapter() {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-ink/40 via-transparent to-transparent" />
           </motion.div>
-          <div className="absolute -bottom-6 -right-6 font-display text-[160px] md:text-[220px] leading-[0.8] text-bolt/15 select-none pointer-events-none">
+          <div className="absolute -bottom-4 -right-4 font-display text-[88px] md:text-[140px] leading-[0.8] text-bolt/15 select-none pointer-events-none">
             II
           </div>
         </div>

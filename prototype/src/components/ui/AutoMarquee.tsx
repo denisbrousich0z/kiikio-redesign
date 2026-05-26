@@ -1,6 +1,8 @@
 "use client";
 
-import type { CSSProperties } from "react";
+import type { CSSProperties, ReactNode } from "react";
+
+type IconDivider = "bolt";
 
 type Props = {
   /** Text to repeat across the strip. */
@@ -13,6 +15,8 @@ type Props = {
   reverse?: boolean;
   /** Divider rendered between repetitions of the text. */
   divider?: string;
+  /** Render an inline SVG between repetitions instead of a text divider. */
+  iconDivider?: IconDivider;
   /** Optional extra class for the wrapping section. */
   className?: string;
   /** Visual size. "lg" — display headline, "md" — compact strip. */
@@ -22,9 +26,10 @@ type Props = {
 /**
  * KIIKIO.COM — autonomous marquee.
  *
- * Runs as a constant CSS animation independent of scroll, mirroring the
- * original kiikio.com ticker. Renders two duplicated tracks so the loop
- * is seamless. Honors prefers-reduced-motion.
+ * Runs as a constant CSS animation independent of scroll. Two duplicated
+ * tracks make the loop seamless. Supports either a plain text divider
+ * (`divider="·"`) or an inline SVG icon (`iconDivider="bolt"`) — never
+ * emoji, per brand guideline. Honours prefers-reduced-motion.
  */
 export default function AutoMarquee({
   text,
@@ -32,6 +37,7 @@ export default function AutoMarquee({
   duration = 32,
   reverse = false,
   divider = "·",
+  iconDivider,
   className = "",
   size = "lg",
 }: Props) {
@@ -40,34 +46,38 @@ export default function AutoMarquee({
     "--marquee-direction": reverse ? "reverse" : "normal",
   };
 
+  // Restrained editorial scale — no oversized type.
   const headlineSize =
     size === "lg"
-      ? "text-[clamp(40px,6.4vw,96px)] tracking-[-0.04em] leading-[1.05]"
-      : "text-[clamp(22px,3.4vw,52px)] tracking-[-0.03em] leading-[1.1]";
+      ? "text-[clamp(28px,4.4vw,64px)] tracking-[-0.035em] leading-[1.06]"
+      : "text-[clamp(18px,2.4vw,36px)] tracking-[-0.025em] leading-[1.1]";
 
   const secondaryStyle: CSSProperties & Record<string, string | number> = {
     "--marquee-duration": `${duration}s`,
     "--marquee-direction": reverse ? "normal" : "reverse",
   };
+
+  const dividerNode: ReactNode = iconDivider === "bolt" ? <BoltIcon /> : divider;
+
   const secondaryRow = secondary && (
     <div className="auto-marquee" style={secondaryStyle}>
       <div className="auto-marquee__track auto-marquee__track--mono">
-        <Block text={secondary} divider={divider} />
-        <Block text={secondary} divider={divider} aria-hidden />
+        <Block text={secondary} divider={dividerNode} />
+        <Block text={secondary} divider={dividerNode} aria-hidden />
       </div>
     </div>
   );
 
   return (
     <div className={`relative bg-ink text-paper border-y border-paper/12 ${className}`}>
-      <div className={`auto-marquee py-4 md:py-5 font-display ${headlineSize}`} style={style}>
+      <div className={`auto-marquee py-3 md:py-4 font-display ${headlineSize}`} style={style}>
         <div className="auto-marquee__track">
-          <Block text={text} divider={divider} />
-          <Block text={text} divider={divider} aria-hidden />
+          <Block text={text} divider={dividerNode} />
+          <Block text={text} divider={dividerNode} aria-hidden />
         </div>
       </div>
       {secondaryRow && (
-        <div className="border-t border-paper/8 py-3 md:py-4 font-tag text-[11px] tracking-[0.32em] text-paper/55">
+        <div className="border-t border-paper/8 py-2.5 md:py-3 font-tag text-[10.5px] tracking-[0.28em] text-paper/55">
           {secondaryRow}
         </div>
       )}
@@ -75,7 +85,14 @@ export default function AutoMarquee({
   );
 }
 
-function Block({ text, divider, ...rest }: { text: string; divider: string } & { "aria-hidden"?: boolean }) {
+function Block({
+  text,
+  divider,
+  ...rest
+}: {
+  text: string;
+  divider: ReactNode;
+} & { "aria-hidden"?: boolean }) {
   // 8 repetitions per track copy — visually dense like the original.
   const items = Array.from({ length: 8 });
   return (
@@ -89,5 +106,26 @@ function Block({ text, divider, ...rest }: { text: string; divider: string } & {
         </span>
       ))}
     </div>
+  );
+}
+
+function BoltIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      width="0.72em"
+      height="0.72em"
+      aria-hidden
+      focusable="false"
+      className="inline-block align-[-0.08em] text-bolt"
+    >
+      <path
+        d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z"
+        fill="currentColor"
+        stroke="currentColor"
+        strokeWidth="0.6"
+        strokeLinejoin="round"
+      />
+    </svg>
   );
 }

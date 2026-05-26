@@ -1,38 +1,32 @@
 "use client";
 
 import { motion, useScroll, useTransform } from "framer-motion";
-import dynamic from "next/dynamic";
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import LogoMark from "@/components/ui/LogoMark";
 import { easing } from "@/lib/motion";
 
-const DisplacementHero = dynamic(() => import("@/components/ui/DisplacementHero"), {
-  ssr: false,
-  loading: () => null,
-});
+const HERO_IMG = "/hero-desert.png";
 
-const HERO_IMG =
-  "https://cdn.shopify.com/s/files/1/0785/8618/3955/files/20260515-180939.jpg";
-
+/**
+ * Hero — single editorial frame.
+ *
+ * Composition borrows the calm corner-aligned layout of editorial sites
+ * (cf. Hidden Room): centred wordmark on a quiet photograph, italic accent
+ * draped across the mark, small typographic meta in each corner, and a
+ * single ENTER call-to-action anchored bottom-right. No oversized
+ * description column, no live-status rail.
+ */
 export default function Hero() {
   const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
-  const fade = useTransform(scrollYProgress, [0, 1], [1, 0.15]);
-  const logoY = useTransform(scrollYProgress, [0, 1], ["0%", "-22%"]);
-  const logoScale = useTransform(scrollYProgress, [0, 1], [1, 1.08]);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end start"],
+  });
+  const fade = useTransform(scrollYProgress, [0, 1], [1, 0.2]);
+  const logoY = useTransform(scrollYProgress, [0, 1], ["0%", "-16%"]);
 
-  const [mountWebGL, setMountWebGL] = useState(false);
   const [time, setTime] = useState("");
-
-  // Lazy-mount the WebGL hero AFTER first paint to keep LCP fast.
-  useEffect(() => {
-    const ric = (window as Window & { requestIdleCallback?: (cb: () => void) => number }).requestIdleCallback;
-    const handle = ric ? ric(() => setMountWebGL(true)) : window.setTimeout(() => setMountWebGL(true), 300);
-    return () => {
-      if (typeof handle === "number") window.clearTimeout(handle);
-    };
-  }, []);
-
   useEffect(() => {
     const tick = () => {
       const d = new Date();
@@ -53,135 +47,127 @@ export default function Hero() {
       ref={ref}
       className="relative h-[100svh] overflow-hidden bg-ink text-paper"
     >
-      {/* Skeleton-first image so the user sees a hero in < 1s before WebGL boots. */}
+      {/* Clean photograph */}
       <img
         src={HERO_IMG}
         alt=""
         aria-hidden
-        className="absolute inset-0 w-full h-full object-cover opacity-90"
+        className="absolute inset-0 w-full h-full object-cover"
       />
 
-      {/* WebGL displaced photography — mounted lazily */}
-      {mountWebGL && <DisplacementHero src={HERO_IMG} />}
+      {/* Soft red radial behind the wordmark — atmosphere, not theatre */}
+      <div
+        aria-hidden
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(38% 46% at 50% 54%, rgba(255,42,31,0.22) 0%, rgba(255,42,31,0.10) 35%, rgba(0,0,0,0) 70%)",
+        }}
+      />
 
-      {/* Hard image vignette */}
-      <div className="absolute inset-0 bg-gradient-to-b from-ink/30 via-ink/5 to-ink/90 pointer-events-none" />
-      <div className="absolute inset-0 bg-gradient-to-r from-ink/55 via-transparent to-transparent pointer-events-none" />
+      {/* Vignette gradients keep type legible */}
+      <div className="absolute inset-0 bg-gradient-to-b from-ink/35 via-transparent to-ink/65 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-r from-ink/40 via-transparent to-transparent pointer-events-none" />
 
-      {/* TOP meta */}
+      {/* TOP-LEFT meta */}
       <motion.div
         style={{ opacity: fade }}
-        className="absolute top-24 md:top-28 inset-x-0 px-gutter flex items-start justify-between text-paper/80 z-10"
+        initial={{ opacity: 0, y: 14 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.9, ease: easing.storm, delay: 0.5 }}
+        className="absolute top-24 md:top-28 left-0 px-gutter font-tag text-tag-xs text-paper/75 z-10"
       >
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, ease: easing.storm, delay: 0.7 }}
-          className="font-tag text-tag-xs"
-        >
-          <div>— DISPATCH 02</div>
-          <div className="text-paper/55">Chapter II / Lightning</div>
-          <div className="text-paper/55">{time || "—"}</div>
-        </motion.div>
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, ease: easing.storm, delay: 0.9 }}
-          className="font-tag text-tag-xs text-right hidden md:block"
-        >
-          <div>EDITION OF 200</div>
-          <div className="text-paper/55">Lot 014 — 030</div>
-          <div className="text-paper/55">Sand-set / Single source</div>
-        </motion.div>
+        <div className="text-paper">— Dispatch 02</div>
+        <div className="text-paper/55">Chapter II / Lightning</div>
+        <div className="text-paper/55">{time || "—"}</div>
       </motion.div>
 
-      {/* HERO LOGO — the real glitch wordmark, edge-to-edge, parallaxed. */}
+      {/* TOP-RIGHT meta */}
       <motion.div
-        style={{ y: logoY, scale: logoScale, opacity: fade }}
-        className="absolute inset-x-0 top-1/2 -translate-y-1/2 px-gutter z-10 pointer-events-none"
+        style={{ opacity: fade }}
+        initial={{ opacity: 0, y: 14 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.9, ease: easing.storm, delay: 0.7 }}
+        className="absolute top-24 md:top-28 right-0 px-gutter font-tag text-tag-xs text-paper/75 text-right z-10 hidden md:block"
+      >
+        <div className="text-paper">Face your storm®</div>
+        <div className="text-paper/55">/Chapter II</div>
+      </motion.div>
+
+      {/* CENTRED WORDMARK + italic accent (cf. Hidden Room / Vivimos overlay) */}
+      <motion.div
+        style={{ y: logoY, opacity: fade }}
+        className="absolute inset-x-0 top-1/2 -translate-y-1/2 px-gutter z-10 pointer-events-none flex flex-col items-center"
       >
         <motion.div
           initial={{ clipPath: "inset(0 100% 0 0)" }}
           animate={{ clipPath: "inset(0 0% 0 0)" }}
-          transition={{ duration: 1.6, ease: easing.storm, delay: 0.4 }}
-          className="origin-left"
+          transition={{ duration: 1.4, ease: easing.storm, delay: 0.3 }}
+          className="relative w-[min(72vw,720px)]"
         >
           <LogoMark
             variant="white"
             layout="block"
-            glitchOnIdle
             alt="Kiikio"
-            className="is-hero w-full"
+            className="w-full"
           />
+
+          {/* Italic accent draped diagonally across the wordmark */}
+          <motion.span
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, ease: easing.storm, delay: 1.0 }}
+            aria-hidden
+            className="absolute left-[6%] right-0 -bottom-3 md:-bottom-5 font-display italic text-bolt text-[clamp(40px,7vw,96px)] tracking-[-0.02em] leading-none select-none"
+            style={{ transform: "rotate(-6deg)", transformOrigin: "left center" }}
+          >
+            after the storm
+          </motion.span>
         </motion.div>
+
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
+          initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, ease: easing.storm, delay: 1.4 }}
-          className="mt-4 font-tag text-tag-xs text-paper/60 flex items-center gap-3"
+          transition={{ duration: 0.9, ease: easing.storm, delay: 1.3 }}
+          className="mt-10 md:mt-12 font-tag text-tag-xs text-paper/65 flex items-center gap-3"
         >
           <span className="w-10 h-px bg-paper/40" />
-          After the storm — Chapter II Lightning
+          Chapter II — Lightning · Edition of 200
         </motion.div>
       </motion.div>
 
-      {/* Bottom block: description + live status rail */}
+      {/* BOTTOM-LEFT — scroll cue */}
       <motion.div
         style={{ opacity: fade }}
-        className="absolute inset-x-0 bottom-0 px-gutter pb-10 md:pb-14 z-10"
+        className="absolute bottom-8 md:bottom-10 left-0 px-gutter z-10 font-tag text-tag-xs text-paper/55"
       >
-        <div className="grid md:grid-cols-12 gap-8 items-end">
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, ease: easing.storm, delay: 1.0 }}
-            className="md:col-span-6 max-w-[44ch] font-body text-paper/85 text-[15px] md:text-[16px] leading-relaxed"
-          >
-            Three years ago a single hoodie lay on a workshop table the night a storm
-            broke. Chapter II is the dispatch from the second strike — distressed,
-            hardware-set, returned intact.
-          </motion.p>
+        <motion.span
+          animate={{ y: [0, 5, 0] }}
+          transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+          className="inline-flex items-center gap-2"
+        >
+          Scroll <span aria-hidden>↓</span>
+        </motion.span>
+      </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, ease: easing.storm, delay: 1.2 }}
-            className="md:col-span-5 md:col-start-8 flex items-center gap-8 md:justify-end font-tag text-tag-xs text-paper/70"
-          >
-            <div className="leading-snug">
-              <div className="text-paper/45">Reading time</div>
-              <div className="text-paper">≈ 4 min</div>
-            </div>
-            <div className="leading-snug">
-              <div className="text-paper/45">Free shipping</div>
-              <div className="text-paper">Over $129</div>
-            </div>
-            <div className="leading-snug hidden lg:block">
-              <div className="text-paper/45">Returns</div>
-              <div className="text-paper">30 days</div>
-            </div>
-          </motion.div>
-        </div>
-
-        {/* Live bottom rail */}
-        <div className="mt-10 flex items-center justify-between border-t border-paper/15 pt-4 font-tag text-tag-xs text-paper/55">
-          <span className="flex items-center gap-2">
-            <span className="w-1.5 h-1.5 bg-bolt rounded-full animate-pulse" />
-            ACTIVE DISPATCH
+      {/* BOTTOM-RIGHT — ENTER call-to-action */}
+      <motion.div
+        style={{ opacity: fade }}
+        initial={{ opacity: 0, x: 16 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.9, ease: easing.storm, delay: 1.4 }}
+        className="absolute bottom-8 md:bottom-10 right-0 px-gutter z-10"
+      >
+        <Link
+          href="/collections/chapter-ii-lightning"
+          data-cursor="Enter dispatch"
+          className="group inline-flex items-baseline gap-3 font-tag text-tag-xs uppercase tracking-[0.24em] text-paper hover:text-dune transition-colors duration-500 ease-[cubic-bezier(0.25,1,0.5,1)]"
+        >
+          <span aria-hidden className="inline-block translate-y-[1px]">↪</span>
+          <span className="border-b border-paper/40 group-hover:border-dune pb-1">
+            Enter
           </span>
-          <span className="hidden md:flex items-center gap-6">
-            <span>Edition of 200</span>
-            <span>Hand-set hardware</span>
-            <span>Studio-cut</span>
-          </span>
-          <motion.span
-            animate={{ y: [0, 6, 0] }}
-            transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
-            className="flex items-center gap-2"
-          >
-            Scroll <span aria-hidden>↓</span>
-          </motion.span>
-        </div>
+        </Link>
       </motion.div>
     </section>
   );

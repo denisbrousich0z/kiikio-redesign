@@ -19,11 +19,13 @@ const config: Config = {
         tag: ["var(--font-tag)", "ui-monospace", "SFMono-Regular", "monospace"],
       },
       fontSize: {
-        "kinetic": ["clamp(5rem, 22vw, 22rem)", { lineHeight: "0.82", letterSpacing: "-0.05em" }],
-        "display-xl": ["clamp(4rem, 13vw, 13rem)", { lineHeight: "0.9", letterSpacing: "-0.04em" }],
-        "display-lg": ["clamp(3rem, 8vw, 7.5rem)", { lineHeight: "0.92", letterSpacing: "-0.035em" }],
-        "display-md": ["clamp(2rem, 5vw, 4.5rem)", { lineHeight: "0.96", letterSpacing: "-0.03em" }],
-        "display-sm": ["clamp(1.5rem, 2.8vw, 2.5rem)", { lineHeight: "1.02", letterSpacing: "-0.02em" }],
+        // Restrained editorial scale — designed for impact at sane sizes,
+        // not for visibility from across the room.
+        "kinetic": ["clamp(3.5rem, 14vw, 14rem)", { lineHeight: "0.86", letterSpacing: "-0.045em" }],
+        "display-xl": ["clamp(2.75rem, 8.5vw, 8.5rem)", { lineHeight: "0.94", letterSpacing: "-0.035em" }],
+        "display-lg": ["clamp(2.25rem, 5.6vw, 5.2rem)", { lineHeight: "0.96", letterSpacing: "-0.03em" }],
+        "display-md": ["clamp(1.6rem, 3.6vw, 3.4rem)", { lineHeight: "1", letterSpacing: "-0.025em" }],
+        "display-sm": ["clamp(1.25rem, 2.2vw, 2rem)", { lineHeight: "1.05", letterSpacing: "-0.015em" }],
         "tag-xs": ["10px", { lineHeight: "1.2", letterSpacing: "0.16em" }],
         "tag-sm": ["11px", { lineHeight: "1.2", letterSpacing: "0.16em" }],
         "tag-md": ["13px", { lineHeight: "1.3", letterSpacing: "0.12em" }],

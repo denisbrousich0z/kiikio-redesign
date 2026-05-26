@@ -26,7 +26,7 @@ export const chapters: Chapter[] = [
     subtitle: "Chapter II — current",
     description:
       "Nature's rawest and most instantaneous power. Sudden. Unpredictable. Untamable. Chapter II is the dispatch from the moment it strikes.",
-    hero: "https://cdn.shopify.com/s/files/1/0785/8618/3955/files/20260515-180939.jpg",
+    hero: "/hero-desert.png",
     status: "live",
   },
   {
