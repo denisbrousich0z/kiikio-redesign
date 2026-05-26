@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Fraunces, Inter, JetBrains_Mono, Sacramento } from "next/font/google";
+import { Fraunces, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -31,14 +31,6 @@ const tag = JetBrains_Mono({
   weight: ["400", "500", "600"],
 });
 
-// Hand-drawn script for editorial accents (cf. Hidden Room "Vivimos").
-const script = Sacramento({
-  subsets: ["latin"],
-  variable: "--font-script",
-  display: "swap",
-  weight: "400",
-});
-
 export const metadata: Metadata = {
   title: "Kiikio — After the Storm",
   description:
@@ -47,16 +39,13 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html
-      lang="en"
-      className={`${display.variable} ${body.variable} ${tag.variable} ${script.variable}`}
-    >
+    <html lang="en" className={`${display.variable} ${body.variable} ${tag.variable}`}>
       <body className="bg-ink text-paper font-body antialiased world-grain overflow-x-hidden">
         <CartProvider>
           <SmoothScroll />
           <BrandRail />
           <Header />
-          <main className="min-h-screen md:pl-nav">{children}</main>
+          <main className="min-h-screen md:pl-rail">{children}</main>
           <Footer />
           <CartDrawer />
           <CustomCursor />

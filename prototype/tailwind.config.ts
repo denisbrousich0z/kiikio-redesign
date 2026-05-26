@@ -17,7 +17,6 @@ const config: Config = {
         display: ["var(--font-display)", "ui-serif", "Georgia", "serif"],
         body: ["var(--font-body)", "ui-sans-serif", "system-ui", "sans-serif"],
         tag: ["var(--font-tag)", "ui-monospace", "SFMono-Regular", "monospace"],
-        script: ["var(--font-script)", "cursive"],
       },
       fontSize: {
         // Restrained editorial scale — designed for impact at sane sizes,
@@ -35,7 +34,6 @@ const config: Config = {
         gutter: "clamp(1.25rem, 3vw, 3rem)",
         chapter: "clamp(6rem, 12vw, 10rem)",
         rail: "56px",
-        nav: "180px",
       },
       transitionTimingFunction: {
         storm: "cubic-bezier(0.25, 1, 0.5, 1)",

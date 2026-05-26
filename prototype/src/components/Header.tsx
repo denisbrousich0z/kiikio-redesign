@@ -31,7 +31,7 @@ export default function Header() {
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 1, ease: easing.storm, delay: 0.4 }}
         className={[
-          "fixed top-0 inset-x-0 z-50 transition-colors duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] md:pl-nav",
+          "fixed top-0 inset-x-0 z-50 transition-colors duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] md:pl-rail",
           scrolled ? "bg-ink/65 backdrop-blur-md border-b border-paper/8" : "bg-transparent",
         ].join(" ")}
       >

@@ -103,15 +103,16 @@ export default function Hero() {
             />
           </motion.div>
 
-          {/* Script accent — bound to the same width as the wordmark so
-              it never overflows past the ® on the right. */}
+          {/* Italic accent — same Fraunces family as the wordmark so
+              the type belongs to a single palette. Contained inside
+              the wordmark's container so it can never run past the ®. */}
           <motion.span
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, ease: easing.storm, delay: 1.0 }}
             aria-hidden
-            className="block font-script text-bolt leading-[0.9] text-[clamp(34px,7vw,82px)] -mt-4 md:-mt-6 pl-[6%] pr-[6%] select-none whitespace-nowrap"
-            style={{ transform: "rotate(-4deg)", transformOrigin: "left center" }}
+            className="block font-display italic text-bolt leading-[0.9] text-[clamp(28px,5.6vw,64px)] tracking-[-0.025em] -mt-3 md:-mt-5 pl-[6%] pr-[6%] select-none whitespace-nowrap"
+            style={{ transform: "rotate(-3deg)", transformOrigin: "left center" }}
           >
             after the storm
           </motion.span>
