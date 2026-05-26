@@ -11,11 +11,13 @@ const HERO_IMG = "/hero-desert.png";
 /**
  * Hero — single editorial frame.
  *
- * Composition borrows the calm corner-aligned layout of editorial sites
- * (cf. Hidden Room): centred wordmark on a quiet photograph, italic accent
- * draped across the mark, small typographic meta in each corner, and a
- * single ENTER call-to-action anchored bottom-right. No oversized
- * description column, no live-status rail.
+ * Composition borrowed from the Hidden Room reference:
+ *   • Left edge is owned by the BrandRail (KIIKIO® + section nav).
+ *   • Dispatch meta lives in the TOP-RIGHT corner.
+ *   • The wordmark sits in the centre with a script accent (Sacramento)
+ *     draped across its lower edge — the wordmark and accent are
+ *     sized to the same inline container so neither can clip the ®.
+ *   • A single ENTER call-to-action anchors the bottom-right.
  */
 export default function Hero() {
   const ref = useRef<HTMLDivElement>(null);
@@ -24,7 +26,7 @@ export default function Hero() {
     offset: ["start start", "end start"],
   });
   const fade = useTransform(scrollYProgress, [0, 1], [1, 0.2]);
-  const logoY = useTransform(scrollYProgress, [0, 1], ["0%", "-16%"]);
+  const logoY = useTransform(scrollYProgress, [0, 1], ["0%", "-14%"]);
 
   const [time, setTime] = useState("");
   useEffect(() => {
@@ -61,7 +63,7 @@ export default function Hero() {
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            "radial-gradient(38% 46% at 50% 54%, rgba(255,42,31,0.22) 0%, rgba(255,42,31,0.10) 35%, rgba(0,0,0,0) 70%)",
+            "radial-gradient(38% 46% at 50% 54%, rgba(255,42,31,0.20) 0%, rgba(255,42,31,0.08) 35%, rgba(0,0,0,0) 70%)",
         }}
       />
 
@@ -69,67 +71,57 @@ export default function Hero() {
       <div className="absolute inset-0 bg-gradient-to-b from-ink/35 via-transparent to-ink/65 pointer-events-none" />
       <div className="absolute inset-0 bg-gradient-to-r from-ink/40 via-transparent to-transparent pointer-events-none" />
 
-      {/* TOP-LEFT meta */}
+      {/* TOP-RIGHT — dispatch meta (left edge belongs to the BrandRail) */}
       <motion.div
         style={{ opacity: fade }}
         initial={{ opacity: 0, y: 14 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.9, ease: easing.storm, delay: 0.5 }}
-        className="absolute top-24 md:top-28 left-0 px-gutter font-tag text-tag-xs text-paper/75 z-10"
+        className="absolute top-24 md:top-28 right-0 px-gutter font-tag text-tag-xs text-paper/75 text-right z-10"
       >
         <div className="text-paper">— Dispatch 02</div>
         <div className="text-paper/55">Chapter II / Lightning</div>
         <div className="text-paper/55">{time || "—"}</div>
       </motion.div>
 
-      {/* TOP-RIGHT meta */}
-      <motion.div
-        style={{ opacity: fade }}
-        initial={{ opacity: 0, y: 14 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.9, ease: easing.storm, delay: 0.7 }}
-        className="absolute top-24 md:top-28 right-0 px-gutter font-tag text-tag-xs text-paper/75 text-right z-10 hidden md:block"
-      >
-        <div className="text-paper">Face your storm®</div>
-        <div className="text-paper/55">/Chapter II</div>
-      </motion.div>
-
-      {/* CENTRED WORDMARK + italic accent (cf. Hidden Room / Vivimos overlay) */}
+      {/* CENTRED WORDMARK + script accent */}
       <motion.div
         style={{ y: logoY, opacity: fade }}
         className="absolute inset-x-0 top-1/2 -translate-y-1/2 px-gutter z-10 pointer-events-none flex flex-col items-center"
       >
-        <motion.div
-          initial={{ clipPath: "inset(0 100% 0 0)" }}
-          animate={{ clipPath: "inset(0 0% 0 0)" }}
-          transition={{ duration: 1.4, ease: easing.storm, delay: 0.3 }}
-          className="relative w-[min(72vw,720px)]"
-        >
-          <LogoMark
-            variant="white"
-            layout="block"
-            alt="Kiikio"
-            className="w-full"
-          />
+        <div className="relative w-[min(82vw,560px)]">
+          <motion.div
+            initial={{ clipPath: "inset(0 100% 0 0)" }}
+            animate={{ clipPath: "inset(0 0% 0 0)" }}
+            transition={{ duration: 1.4, ease: easing.storm, delay: 0.3 }}
+          >
+            <LogoMark
+              variant="white"
+              layout="block"
+              alt="Kiikio"
+              className="w-full"
+            />
+          </motion.div>
 
-          {/* Italic accent draped diagonally across the wordmark */}
+          {/* Script accent — bound to the same width as the wordmark so
+              it never overflows past the ® on the right. */}
           <motion.span
-            initial={{ opacity: 0, y: 12 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, ease: easing.storm, delay: 1.0 }}
             aria-hidden
-            className="absolute left-[6%] right-0 -bottom-3 md:-bottom-5 font-display italic text-bolt text-[clamp(40px,7vw,96px)] tracking-[-0.02em] leading-none select-none"
-            style={{ transform: "rotate(-6deg)", transformOrigin: "left center" }}
+            className="block font-script text-bolt leading-[0.9] text-[clamp(34px,7vw,82px)] -mt-4 md:-mt-6 pl-[6%] pr-[6%] select-none whitespace-nowrap"
+            style={{ transform: "rotate(-4deg)", transformOrigin: "left center" }}
           >
             after the storm
           </motion.span>
-        </motion.div>
+        </div>
 
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, ease: easing.storm, delay: 1.3 }}
-          className="mt-10 md:mt-12 font-tag text-tag-xs text-paper/65 flex items-center gap-3"
+          className="mt-10 md:mt-14 font-tag text-tag-xs text-paper/65 flex items-center gap-3"
         >
           <span className="w-10 h-px bg-paper/40" />
           Chapter II — Lightning · Edition of 200

@@ -29,9 +29,9 @@ export default function HorizontalChapter() {
       style={{ height: "500vh" }}
     >
       <div className="sticky top-0 h-screen w-full overflow-hidden">
-        <motion.div style={{ x }} className="flex h-full w-[500vw] will-change-transform">
+        <motion.div style={{ x }} className="flex h-full w-[500%] will-change-transform">
           {/* Frame 0 — Title slab */}
-          <div className="w-screen h-full shrink-0 relative flex items-center px-gutter">
+          <div className="w-full h-full shrink-0 relative flex items-center px-gutter">
             <div className="grid grid-cols-12 gap-8 w-full items-end">
               <div className="col-span-12 md:col-span-8">
                 <div className="font-tag text-tag-xs text-paper/55 mb-6">— Reel / Chapter II</div>
@@ -72,7 +72,7 @@ function Frame({
   index: number;
 }) {
   return (
-    <div className="w-screen h-full shrink-0 relative grid grid-cols-12 bg-ink">
+    <div className="w-full h-full shrink-0 relative grid grid-cols-12 bg-ink">
       {/* LEFT — clean photography column, no text overlays */}
       <div className="col-span-12 md:col-span-7 relative h-[60svh] md:h-full bg-storm overflow-hidden">
         <img
