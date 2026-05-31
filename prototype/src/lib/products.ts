@@ -8,14 +8,25 @@
  * the redesign — the editorial layer the current site lacks.
  */
 
+export type ProductBadge = {
+  /** Short label shown on the product card and PDP eyebrow. */
+  label: string;
+  /** Visual intent for the badge. */
+  tone: "edition" | "final" | "studio" | "member" | "new";
+};
+
 export type Product = {
   slug: string;
-  name: string; // The editorial display name we propose
-  legalName: string; // Original product name retained for SKU lookup
+  name: string;
+  legalName: string;
   category: "tops" | "denim" | "outerwear" | "footwear" | "accessories";
   chapter: "I" | "II" | "III";
   lot: string;
   price: number;
+  /** Optional member price — shown alongside the regular price (never as a strikethrough sale theater). */
+  memberPrice?: number;
+  /** Edition / drop-status badges. Studio-tier, never "SALE -50%". */
+  badges?: ProductBadge[];
   colorways: { name: string; hex: string }[];
   sizes: string[];
   description: string;
@@ -23,8 +34,6 @@ export type Product = {
   hero: string;
   gallery: string[];
 };
-
-const cdn = (h: string) => `https://cdn.shopify.com/s/files/1/0785/8618/3955/files/${h}`;
 
 export const products: Product[] = [
   {
@@ -35,6 +44,11 @@ export const products: Product[] = [
     chapter: "II",
     lot: "Lot 014",
     price: 54,
+    memberPrice: 46,
+    badges: [
+      { label: "Edition of 200", tone: "edition" },
+      { label: "Member −15", tone: "member" },
+    ],
     colorways: [
       { name: "Rust", hex: "#7C2F2A" },
       { name: "Ink", hex: "#0B0B0B" },
@@ -62,6 +76,11 @@ export const products: Product[] = [
     chapter: "II",
     lot: "Lot 021",
     price: 88,
+    memberPrice: 75,
+    badges: [
+      { label: "Final 12", tone: "final" },
+      { label: "Member −15", tone: "member" },
+    ],
     colorways: [{ name: "Storm Blue", hex: "#1F2933" }],
     sizes: ["S", "M", "L", "XL", "XXL"],
     description:
@@ -83,6 +102,7 @@ export const products: Product[] = [
     chapter: "II",
     lot: "Lot 019",
     price: 85,
+    badges: [{ label: "Studio cut", tone: "studio" }],
     colorways: [{ name: "Ink", hex: "#0B0B0B" }],
     sizes: ["S", "M", "L", "XL", "XXL"],
     description:
@@ -102,6 +122,11 @@ export const products: Product[] = [
     chapter: "II",
     lot: "Lot 011",
     price: 83,
+    memberPrice: 71,
+    badges: [
+      { label: "Edition of 200", tone: "edition" },
+      { label: "Member −15", tone: "member" },
+    ],
     colorways: [{ name: "Ink", hex: "#0B0B0B" }],
     sizes: ["S", "M", "L", "XL"],
     description:
@@ -120,6 +145,11 @@ export const products: Product[] = [
     chapter: "II",
     lot: "Lot 002",
     price: 40,
+    memberPrice: 34,
+    badges: [
+      { label: "Edition of 200", tone: "edition" },
+      { label: "Member −15", tone: "member" },
+    ],
     colorways: [{ name: "Ink", hex: "#0B0B0B" }],
     sizes: ["S", "M", "L", "XL"],
     description:
@@ -141,6 +171,7 @@ export const products: Product[] = [
     chapter: "II",
     lot: "Lot 007",
     price: 56,
+    badges: [{ label: "Studio cut", tone: "studio" }],
     colorways: [{ name: "Ink", hex: "#0B0B0B" }],
     sizes: ["S", "M", "L", "XL"],
     description:
@@ -162,6 +193,11 @@ export const products: Product[] = [
     chapter: "II",
     lot: "Lot 028",
     price: 191,
+    memberPrice: 162,
+    badges: [
+      { label: "Final 12", tone: "final" },
+      { label: "Member −15", tone: "member" },
+    ],
     colorways: [{ name: "Ink/Bolt", hex: "#0B0B0B" }],
     sizes: ["S", "M", "L", "XL"],
     description:
@@ -182,6 +218,7 @@ export const products: Product[] = [
     chapter: "I",
     lot: "Lot 003",
     price: 97,
+    badges: [{ label: "Archive reissue", tone: "studio" }],
     colorways: [{ name: "Dust", hex: "#C8B69A" }],
     sizes: ["S", "M", "L", "XL"],
     description:
@@ -203,6 +240,11 @@ export const products: Product[] = [
     chapter: "II",
     lot: "Lot 024",
     price: 79,
+    memberPrice: 67,
+    badges: [
+      { label: "Edition of 200", tone: "edition" },
+      { label: "Member −15", tone: "member" },
+    ],
     colorways: [{ name: "Ink", hex: "#0B0B0B" }],
     sizes: ["S", "M", "L", "XL"],
     description:
@@ -224,6 +266,11 @@ export const products: Product[] = [
     chapter: "II",
     lot: "Lot 030",
     price: 139,
+    memberPrice: 118,
+    badges: [
+      { label: "New release", tone: "new" },
+      { label: "Member −15", tone: "member" },
+    ],
     colorways: [
       { name: "Bolt", hex: "#C8201E" },
       { name: "Ink", hex: "#0B0B0B" },
@@ -237,6 +284,103 @@ export const products: Product[] = [
       "https://cdn.shopify.com/s/files/1/0785/8618/3955/files/Gemini_Generated_Image_7xyps77xyps77xyp_a92ad5ed-d327-4017-b56c-399fbb70f700.png",
     ],
   },
+  {
+    slug: "lightning-zip-hoodie",
+    name: "Lightning Zip Hoodie",
+    legalName: "LIGHTNING Series | Distressed Zip Hoodie",
+    category: "outerwear",
+    chapter: "II",
+    lot: "Lot 016",
+    price: 124,
+    memberPrice: 105,
+    badges: [
+      { label: "Edition of 200", tone: "edition" },
+      { label: "Member −15", tone: "member" },
+    ],
+    colorways: [
+      { name: "Storm", hex: "#1C1C1F" },
+      { name: "Dust", hex: "#C8B69A" },
+    ],
+    sizes: ["S", "M", "L", "XL", "XXL"],
+    description:
+      "Heavy-weight zip hoodie washed to a static finish. Embroidered Lightning bolt on the back, brushed interior, single-pull metal zip.",
+    notes: ["480 gsm heavyweight fleece", "Embroidered back bolt", "Brushed interior, metal zip", "Boxy cut"],
+    hero: "https://cdn.shopify.com/s/files/1/0785/8618/3955/files/5_146c47a5-3b44-4c0c-9367-7628598356a0.jpg",
+    gallery: [
+      "https://cdn.shopify.com/s/files/1/0785/8618/3955/files/5_146c47a5-3b44-4c0c-9367-7628598356a0.jpg",
+      "https://cdn.shopify.com/s/files/1/0785/8618/3955/files/11_56f9879f-805b-498b-849d-d05b55af7509.jpg",
+    ],
+  },
+  {
+    slug: "storm-cap",
+    name: "Storm Cap — Mono",
+    legalName: "KIIKIO Six-Panel Storm Cap",
+    category: "accessories",
+    chapter: "II",
+    lot: "Lot 005",
+    price: 38,
+    memberPrice: 32,
+    badges: [
+      { label: "Edition of 200", tone: "edition" },
+      { label: "Member −15", tone: "member" },
+    ],
+    colorways: [
+      { name: "Ink", hex: "#0B0B0B" },
+      { name: "Dust", hex: "#C8B69A" },
+    ],
+    sizes: ["One size"],
+    description:
+      "Six-panel washed cotton cap with sand-set embroidery. Curved bill, brass buckle adjuster. Low profile.",
+    notes: ["Washed cotton, low profile", "Sand-set embroidery", "Brass buckle adjuster"],
+    hero: "https://cdn.shopify.com/s/files/1/0785/8618/3955/files/2222.jpg",
+    gallery: [
+      "https://cdn.shopify.com/s/files/1/0785/8618/3955/files/2222.jpg",
+      "https://cdn.shopify.com/s/files/1/0785/8618/3955/files/0ea09c4aaff7e9ceb53a8bf5914238c2.jpg",
+    ],
+  },
+  {
+    slug: "hardware-belt",
+    name: "Hardware Belt",
+    legalName: "KIIKIO Heavy Hardware Belt",
+    category: "accessories",
+    chapter: "II",
+    lot: "Lot 009",
+    price: 64,
+    badges: [{ label: "Studio cut", tone: "studio" }],
+    colorways: [{ name: "Ink", hex: "#0B0B0B" }],
+    sizes: ["S/M", "L/XL"],
+    description:
+      "Tactical hardware belt with heavy buckle, double D-ring keeper and a removable chain. Cut to take a loadout, finished to dress up.",
+    notes: ["Heavy steel buckle", "Removable chain", "Double D-ring keeper"],
+    hero: "https://cdn.shopify.com/s/files/1/0785/8618/3955/files/14_65051387-3cc3-40dc-8676-ca54fcb2adc2.jpg",
+    gallery: [
+      "https://cdn.shopify.com/s/files/1/0785/8618/3955/files/14_65051387-3cc3-40dc-8676-ca54fcb2adc2.jpg",
+    ],
+  },
+  {
+    slug: "field-bag",
+    name: "Field Bag — Storm",
+    legalName: "KIIKIO Field Shoulder Bag",
+    category: "accessories",
+    chapter: "II",
+    lot: "Lot 023",
+    price: 89,
+    memberPrice: 76,
+    badges: [
+      { label: "New release", tone: "new" },
+      { label: "Member −15", tone: "member" },
+    ],
+    colorways: [{ name: "Ink", hex: "#0B0B0B" }],
+    sizes: ["One size"],
+    description:
+      "Compact field shoulder bag in waxed cotton with a YKK water-resistant zip and a removable utility strap. Built for the chapter.",
+    notes: ["Waxed cotton, water-resistant", "YKK metal zip", "Removable utility strap"],
+    hero: "https://cdn.shopify.com/s/files/1/0785/8618/3955/files/12_2d4eed8a-7dba-4094-bb6b-53455b42c1b3.jpg",
+    gallery: [
+      "https://cdn.shopify.com/s/files/1/0785/8618/3955/files/12_2d4eed8a-7dba-4094-bb6b-53455b42c1b3.jpg",
+      "https://cdn.shopify.com/s/files/1/0785/8618/3955/files/10_b5d94d57-81ce-4de6-bf62-2df6357703bc.jpg",
+    ],
+  },
 ];
 
 export function getProduct(slug: string) {
@@ -244,5 +388,11 @@ export function getProduct(slug: string) {
 }
 
 export function getRelated(slug: string, n = 4) {
-  return products.filter((p) => p.slug !== slug).slice(0, n);
+  const current = getProduct(slug);
+  const pool = products.filter((p) => p.slug !== slug);
+  if (!current) return pool.slice(0, n);
+  // Prefer same category first, then same chapter, then fall back.
+  const sameCategory = pool.filter((p) => p.category === current.category);
+  const sameChapter = pool.filter((p) => p.chapter === current.chapter && p.category !== current.category);
+  return [...sameCategory, ...sameChapter, ...pool].slice(0, n);
 }

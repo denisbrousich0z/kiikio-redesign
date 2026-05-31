@@ -1,12 +1,10 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-
 type Props = {
   variant?: "white" | "black";
-  /** "block" = full responsive image, "inline" = small fixed height inline */
+  /** "block" = full responsive image, "inline" = small fixed height inline, "vertical" = rotated for rails */
   layout?: "block" | "inline" | "vertical";
-  /** if true, occasionally trigger a glitch animation */
+  /** Legacy prop, retained for API compatibility. No longer triggers RGB glitch. */
   glitchOnIdle?: boolean;
   alt?: string;
   className?: string;
@@ -15,43 +13,21 @@ type Props = {
 };
 
 /**
- * The real Kiikio glitch wordmark.
+ * Kiikio wordmark — clean, single-layer PNG.
  *
- * Renders three stacked copies of the actual logo PNG. Two of them are
- * displaced + colored (bolt red & dune sand) and clipped into narrow
- * horizontal slices. On hover or random idle pulse, the offsets
- * intensify, producing a CRT-glitch / RGB-split effect that matches
- * the brand's existing logo aesthetic.
+ * The previous RGB-split / CRT-glitch treatment has been removed at the
+ * client's request. The mark now renders as a flat, calm image — its
+ * weight is in the typography, not in the effect.
  */
 export default function LogoMark({
   variant = "white",
   layout = "block",
-  glitchOnIdle = false,
   alt = "Kiikio",
   className = "",
   width,
   height,
 }: Props) {
-  const wrapRef = useRef<HTMLSpanElement>(null);
   const src = variant === "white" ? "/kiikio-mark-white.png" : "/kiikio-mark-black.png";
-
-  useEffect(() => {
-    if (!glitchOnIdle) return;
-    const el = wrapRef.current;
-    if (!el) return;
-    let t: ReturnType<typeof setTimeout>;
-    const loop = () => {
-      const delay = 4000 + Math.random() * 6000;
-      t = setTimeout(() => {
-        el.classList.remove("logo-pulse");
-        void el.offsetWidth;
-        el.classList.add("logo-pulse");
-        loop();
-      }, delay);
-    };
-    loop();
-    return () => clearTimeout(t);
-  }, [glitchOnIdle]);
 
   const layoutCls =
     layout === "block"
@@ -67,16 +43,17 @@ export default function LogoMark({
 
   return (
     <span
-      ref={wrapRef}
-      className={["logo-mark relative select-none", layoutCls, className].join(" ")}
+      className={["logo-mark logo-mark--flat relative select-none", layoutCls, className].join(" ")}
       style={sizeStyle}
       aria-label={alt}
       role="img"
     >
-      <img src={src} alt={alt} className="logo-base w-full h-full object-contain" draggable={false} />
-      <span className="logo-layer logo-layer-r" aria-hidden style={{ backgroundImage: `url(${src})` }} />
-      <span className="logo-layer logo-layer-b" aria-hidden style={{ backgroundImage: `url(${src})` }} />
-      <span className="logo-scan" aria-hidden />
+      <img
+        src={src}
+        alt={alt}
+        className="logo-base w-full h-full object-contain"
+        draggable={false}
+      />
     </span>
   );
 }

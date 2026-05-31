@@ -32,24 +32,25 @@ export default function Chapter() {
           </Reveal>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-3 gap-8 md:gap-10">
           {chapters.map((c, i) => (
             <Reveal key={c.slug} delay={i} className="group">
               <Link href={`/collections/${c.slug}`} data-cursor={c.title} className="block">
+                {/* Photo — clean, only chapter # and status corner badges (no large title on image) */}
                 <motion.div
                   style={{ y: i % 2 === 0 ? y1 : y2 }}
-                  className="relative aspect-[3/4] overflow-hidden bg-storm mb-4 card-storm"
+                  className="relative aspect-[3/4] overflow-hidden bg-storm mb-6 card-storm"
                 >
                   <motion.img
                     src={c.hero}
                     alt={`Chapter ${c.number} — ${c.title}`}
-                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1200ms] ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-[1.06]"
-                    initial={{ scale: 1.1, opacity: 0 }}
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1200ms] ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-[1.05]"
+                    initial={{ scale: 1.08, opacity: 0 }}
                     whileInView={{ scale: 1, opacity: 1 }}
                     transition={{ duration: 1.6, ease: [0.25, 1, 0.5, 1] }}
                     viewport={{ once: true }}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-ink/65 via-ink/15 to-transparent" />
+                  {/* Tiny corner meta only — no big titles on photos */}
                   <div className="absolute top-4 left-4 font-tag text-tag-xs text-paper/85">
                     Chapter {c.number}
                   </div>
@@ -63,16 +64,24 @@ export default function Chapter() {
                     {c.status === "archive" && "Archive"}
                     {c.status === "incoming" && "Incoming"}
                   </div>
-                  <div className="absolute bottom-5 left-5 right-5">
-                    <div className="font-display text-[40px] md:text-[52px] tracking-[-0.03em] text-paper leading-[0.92]">
-                      {c.title}
-                    </div>
-                  </div>
                 </motion.div>
-                <div className="font-tag text-tag-xs text-paper/50">{c.subtitle}</div>
-                <p className="font-body text-paper/60 text-[14px] mt-2 max-w-[36ch] leading-relaxed">
+
+                {/* Title and meta live BELOW the image on clean ground */}
+                <div className="flex items-baseline justify-between gap-4">
+                  <h3 className="font-display text-[22px] md:text-[28px] tracking-[-0.025em] leading-[1.05] text-paper group-hover:text-dune transition-colors duration-500 ease-[cubic-bezier(0.25,1,0.5,1)]">
+                    {c.title}
+                  </h3>
+                  <span className="font-tag text-tag-xs text-paper/55 whitespace-nowrap">
+                    {c.subtitle}
+                  </span>
+                </div>
+                <p className="font-body text-paper/60 text-[14px] mt-3 max-w-[40ch] leading-relaxed">
                   {c.description}
                 </p>
+                <div className="mt-5 font-tag text-tag-xs text-paper/50 inline-flex items-center gap-2">
+                  <span className="w-6 h-px bg-paper/45 transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:w-12 group-hover:bg-paper" />
+                  Enter chapter
+                </div>
               </Link>
             </Reveal>
           ))}

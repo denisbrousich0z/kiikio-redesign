@@ -26,7 +26,7 @@ export default function StoryChapter() {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-ink/40 via-transparent to-transparent" />
           </motion.div>
-          <div className="absolute -bottom-6 -right-6 font-display text-[160px] md:text-[220px] leading-[0.8] text-bolt/15 select-none pointer-events-none">
+          <div className="absolute -bottom-4 -right-4 font-display text-[88px] md:text-[140px] leading-[0.8] text-bolt/15 select-none pointer-events-none">
             II
           </div>
         </div>
@@ -54,11 +54,19 @@ export default function StoryChapter() {
             </div>
           </Reveal>
           <Reveal delay={3} className="mt-10 flex flex-wrap items-center gap-6">
-            <Link href="/collections/chapter-ii-lightning" className="btn-storm bg-paper text-ink hover:bg-dune">
-              Enter Chapter II
+            <Link
+              href="/collections/chapter-ii-lightning"
+              data-cursor="Read chapter II"
+              className="btn-storm"
+            >
+              Read Chapter II
               <span aria-hidden>→</span>
             </Link>
-            <Link href="#" className="font-tag text-tag-xs text-paper/65 border-b border-paper/40 pb-1 hover:text-paper">
+            <Link
+              href="#"
+              data-cursor="Full studio note"
+              className="font-tag text-tag-xs text-paper/65 border-b border-paper/40 pb-1 hover:text-paper transition-colors duration-300"
+            >
               Full studio note
             </Link>
           </Reveal>

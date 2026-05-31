@@ -30,6 +30,117 @@ html {
   html, body, a, button, input, textarea, select, label, [role="button"] {
     cursor: none;
   }
+  /* Text fields restore the I-beam cursor so typing feels native */
+  input[type="email"], input[type="text"], input[type="search"], textarea, [contenteditable="true"] {
+    cursor: text;
+  }
+}
+
+/* ===========================================================
+   KIIKIO Cursor — minimalist crosshair, no circle, no RGB.
+   =========================================================== */
+.kk-cursor,
+.kk-cursor-label {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  will-change: transform;
+}
+.kk-cursor {
+  z-index: 9700;
+  width: 16px;
+  height: 16px;
+  mix-blend-mode: difference;
+  transition: transform 200ms cubic-bezier(0.25, 1, 0.5, 1),
+    opacity 200ms cubic-bezier(0.25, 1, 0.5, 1);
+}
+.kk-cursor__line {
+  position: absolute;
+  background: #f4f1ea;
+  transition: width 300ms cubic-bezier(0.25, 1, 0.5, 1),
+    height 300ms cubic-bezier(0.25, 1, 0.5, 1),
+    transform 300ms cubic-bezier(0.25, 1, 0.5, 1),
+    opacity 200ms cubic-bezier(0.25, 1, 0.5, 1);
+}
+.kk-cursor__line--h {
+  top: 50%;
+  left: 50%;
+  width: 14px;
+  height: 1px;
+  transform: translate(-50%, -50%);
+}
+.kk-cursor__line--v {
+  top: 50%;
+  left: 50%;
+  width: 1px;
+  height: 14px;
+  transform: translate(-50%, -50%);
+}
+.kk-cursor__dot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 3px;
+  height: 3px;
+  border-radius: 999px;
+  background: #f4f1ea;
+  transform: translate(-50%, -50%) scale(0);
+  transform-origin: center;
+  transition: transform 260ms cubic-bezier(0.25, 1, 0.5, 1);
+}
+.kk-cursor[data-state="hovering"] .kk-cursor__line--h {
+  width: 22px;
+}
+.kk-cursor[data-state="hovering"] .kk-cursor__line--v {
+  height: 22px;
+}
+.kk-cursor[data-state="hovering"] .kk-cursor__dot {
+  transform: translate(-50%, -50%) scale(1);
+}
+.kk-cursor[data-state="labeled"] .kk-cursor__line--h {
+  width: 24px;
+}
+.kk-cursor[data-state="labeled"] .kk-cursor__line--v {
+  height: 24px;
+}
+.kk-cursor[data-state="labeled"] .kk-cursor__dot {
+  transform: translate(-50%, -50%) scale(1.6);
+}
+.kk-cursor[data-press="1"] .kk-cursor__line--h,
+.kk-cursor[data-press="1"] .kk-cursor__line--v {
+  opacity: 0.7;
+}
+.kk-cursor[data-press="1"] .kk-cursor__dot {
+  transform: translate(-50%, -50%) scale(1.2);
+}
+.kk-cursor[data-hidden="1"] {
+  opacity: 0;
+}
+.kk-cursor-label {
+  z-index: 9760;
+  padding: 4px 8px;
+  font-family: var(--font-tag), ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #0a0a0a;
+  background: #f4f1ea;
+  white-space: nowrap;
+  opacity: 0;
+  transform-origin: top left;
+  transition: opacity 220ms cubic-bezier(0.25, 1, 0.5, 1);
+}
+.kk-cursor-label[data-visible="1"] {
+  opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .kk-cursor,
+  .kk-cursor__line,
+  .kk-cursor__dot,
+  .kk-cursor-label {
+    transition: none;
+  }
 }
 
 /* Lenis hooks */
@@ -89,19 +200,24 @@ html.lenis, html.lenis body { height: auto; }
   100% { opacity: 0;   background-color: rgba(255,255,255,0); }
 }
 
-/* Magnetic button base */
+/* ===========================================================
+   KIIKIO buttons — uniform CTA system
+   =========================================================== */
 .btn-storm {
   position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 0.85rem;
-  padding: 1.15rem 1.8rem;
+  justify-content: center;
+  gap: 0.9rem;
+  min-height: 52px;
+  padding: 0 1.6rem;
   background: var(--paper);
   color: var(--ink);
   font-family: var(--font-tag);
   font-size: 11px;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
+  white-space: nowrap;
   border: 1px solid var(--paper);
   transition:
     background 400ms cubic-bezier(0.25, 1, 0.5, 1),
@@ -111,6 +227,9 @@ html.lenis, html.lenis body { height: auto; }
 .btn-storm:hover { background: transparent; color: var(--paper); }
 .btn-storm--invert { background: transparent; color: var(--paper); border-color: var(--paper); }
 .btn-storm--invert:hover { background: var(--paper); color: var(--ink); }
+.btn-storm--block { width: 100%; }
+.btn-storm--sm { min-height: 44px; padding: 0 1.2rem; font-size: 10px; letter-spacing: 0.18em; }
+.btn-storm--lg { min-height: 60px; padding: 0 2rem; font-size: 12px; letter-spacing: 0.22em; }
 
 .btn-ghost {
   display: inline-flex;
@@ -145,11 +264,87 @@ html.lenis, html.lenis body { height: auto; }
   padding-right: 2rem;
 }
 
+/* ===========================================================
+   AutoMarquee — autonomous CSS-driven loop.
+   =========================================================== */
+.auto-marquee {
+  position: relative;
+  overflow: hidden;
+  --marquee-duration: 32s;
+  --marquee-direction: normal;
+}
+.auto-marquee__track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+  animation: auto-marquee-slide var(--marquee-duration) linear infinite;
+  animation-direction: var(--marquee-direction);
+}
+.auto-marquee__track--mono {
+  font-family: var(--font-tag), ui-monospace, monospace;
+  text-transform: uppercase;
+}
+.auto-marquee__block {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  padding-right: 0; /* spacing lives on each item */
+}
+.auto-marquee__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  padding-right: 1rem;
+  white-space: nowrap;
+}
+.auto-marquee__divider {
+  display: inline-flex;
+  align-items: center;
+  color: rgba(244, 241, 234, 0.45);
+}
+@keyframes auto-marquee-slide {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .auto-marquee__track { animation-duration: 0s; }
+}
+
+/* ===========================================================
+   Studio-tier product badges
+   =========================================================== */
+.kk-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 4px 8px;
+  font-family: var(--font-tag);
+  font-size: 9.5px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  line-height: 1;
+  border: 1px solid currentColor;
+  background: transparent;
+  white-space: nowrap;
+}
+.kk-badge--edition { color: rgba(244, 241, 234, 0.85); border-color: rgba(244, 241, 234, 0.45); }
+.kk-badge--final   { color: #ffb4af; border-color: rgba(255, 42, 31, 0.6); background: rgba(255, 42, 31, 0.08); }
+.kk-badge--studio  { color: rgba(200, 182, 154, 0.95); border-color: rgba(200, 182, 154, 0.55); }
+.kk-badge--member  { color: rgba(244, 241, 234, 0.95); border-color: rgba(244, 241, 234, 0.6); background: rgba(244, 241, 234, 0.08); }
+.kk-badge--new     { color: #0a0a0a; background: #f4f1ea; border-color: #f4f1ea; }
+.kk-badge__dot {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: currentColor;
+}
+
 /* Hide scrollbar utility */
 .hide-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
 .hide-scrollbar::-webkit-scrollbar { display: none; }
 
-/* Vertical brand rail */
+/* Vertical brand rail — narrow editorial marker, 56px wide */
 .brand-rail {
   position: fixed;
   top: 0; left: 0; bottom: 0;
@@ -205,10 +400,9 @@ html.lenis, html.lenis body { height: auto; }
 .card-storm:hover::after { opacity: 1; }
 
 /* ===========================================================
-   KIIKIO GLITCH LOGO
-   Renders three copies of the wordmark: base + two displaced
-   layers (red & cyan/blue) that get clipped into horizontal
-   slices for an RGB-split CRT-glitch effect.
+   KIIKIO LOGO
+   The wordmark renders as a single clean PNG — no RGB-split,
+   no scanlines. Class hooks below are kept for layout only.
    =========================================================== */
 .logo-mark {
   display: inline-block;
@@ -218,99 +412,16 @@ html.lenis, html.lenis body { height: auto; }
 }
 .logo-mark .logo-base {
   position: relative;
-  z-index: 2;
   display: block;
-}
-.logo-mark .logo-layer {
-  position: absolute;
-  inset: 0;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
-  mix-blend-mode: screen;
-  opacity: 0;
-  transition: opacity 400ms cubic-bezier(0.25, 1, 0.5, 1),
-              transform 400ms cubic-bezier(0.25, 1, 0.5, 1);
-  pointer-events: none;
-  z-index: 1;
-}
-.logo-mark .logo-layer-r {
-  filter: url(#kiikio-tint-bolt) drop-shadow(0 0 0 #ff2a1f);
-  background-color: transparent;
-  /* fallback if filter unsupported: tint via mask not possible cross-browser w/o SVG.
-     We rely on the SVG filter in the layout. */
-}
-.logo-mark .logo-layer-b {
-  filter: url(#kiikio-tint-dune);
-}
-.logo-mark .logo-scan {
-  position: absolute;
-  inset: 0;
-  z-index: 3;
-  pointer-events: none;
-  opacity: 0;
-  background: repeating-linear-gradient(
-    180deg,
-    rgba(0,0,0,0) 0px,
-    rgba(0,0,0,0) 4px,
-    rgba(0,0,0,0.18) 4px,
-    rgba(0,0,0,0.18) 5px
-  );
-  mix-blend-mode: multiply;
-  transition: opacity 300ms cubic-bezier(0.25, 1, 0.5, 1);
-}
-.logo-mark:hover .logo-layer,
-.logo-mark.logo-pulse .logo-layer {
-  opacity: 0.85;
-}
-.logo-mark:hover .logo-layer-r,
-.logo-mark.logo-pulse .logo-layer-r {
-  transform: translate(-3px, 0);
-  animation: logo-slice-r 700ms steps(8) 1;
-}
-.logo-mark:hover .logo-layer-b,
-.logo-mark.logo-pulse .logo-layer-b {
-  transform: translate(3px, 0);
-  animation: logo-slice-b 700ms steps(8) 1;
-}
-.logo-mark:hover .logo-scan,
-.logo-mark.logo-pulse .logo-scan {
-  opacity: 0.55;
-}
-
-@keyframes logo-slice-r {
-  0%   { clip-path: inset(0 0 80% 0); transform: translate(-4px, 0); }
-  20%  { clip-path: inset(40% 0 50% 0); transform: translate(-6px, 0); }
-  40%  { clip-path: inset(60% 0 20% 0); transform: translate(-3px, 0); }
-  60%  { clip-path: inset(20% 0 70% 0); transform: translate(-5px, 0); }
-  80%  { clip-path: inset(80% 0 5% 0); transform: translate(-2px, 0); }
-  100% { clip-path: inset(0 0 100% 0); transform: translate(-3px, 0); }
-}
-@keyframes logo-slice-b {
-  0%   { clip-path: inset(70% 0 10% 0); transform: translate(4px, 0); }
-  20%  { clip-path: inset(20% 0 60% 0); transform: translate(2px, 0); }
-  40%  { clip-path: inset(50% 0 30% 0); transform: translate(6px, 0); }
-  60%  { clip-path: inset(10% 0 80% 0); transform: translate(3px, 0); }
-  80%  { clip-path: inset(85% 0 0 0); transform: translate(5px, 0); }
-  100% { clip-path: inset(100% 0 0 0); transform: translate(3px, 0); }
 }
 
 /* Vertical orientation for brand rail */
 .logo-mark.is-vertical {
   writing-mode: vertical-rl;
-  transform: rotate(180deg);
-}
-
-/* Massive hero display variant */
-.logo-mark.is-hero {
-  width: 100%;
-  filter: drop-shadow(0 12px 60px rgba(255, 42, 31, 0.25));
 }
 
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
-  .logo-mark:hover .logo-layer,
-  .logo-mark.logo-pulse .logo-layer { animation: none; transform: none; }
   .world-grain::before { animation: none; }
   .lightning-flash.is-strike { animation-duration: 0.6s; }
 }

@@ -1,51 +1,62 @@
 "use client";
 
 import Link from "next/link";
-import LogoMark from "@/components/ui/LogoMark";
+import CountrySelector from "@/components/ui/CountrySelector";
 
 /**
- * Vertical brand rail — fixed to the left edge.
+ * Narrow vertical brand rail (56px) pinned to the left edge of the
+ * viewport.
  *
- * - Top: ® index card (live dispatch number)
- * - Middle: KIIKIO® wordmark rotated -90deg so it reads bottom-to-top.
- *   Hover triggers RGB-slice glitch. Idle pulse fires every 4–10s.
- * - Bottom: chapter marker
+ *   • top:    ® / 02            (dispatch counter)
+ *   • middle: rotated KIIKIO    (clean 90° rotation, fixed-size box)
+ *   • bottom: country selector  (US / USD ▾, click to change market)
+ *
+ * Mobile: the rail is hidden — the FullscreenMenu drawer carries
+ * everything the rail surfaces.
  */
 export default function BrandRail() {
   return (
-    <div className="brand-rail font-tag text-tag-xs text-paper/65 hidden md:flex">
-      <div className="text-paper/70 leading-tight text-center">
-        ®<br />
-        02
+    <aside
+      className="brand-rail font-tag text-tag-xs text-paper/65 hidden md:flex"
+      aria-label="Studio rail"
+    >
+      {/* TOP — dispatch counter */}
+      <div
+        className="flex flex-col items-center gap-1 leading-none text-paper/55"
+        aria-hidden
+      >
+        <span>®</span>
+        <span>02</span>
       </div>
 
+      {/* MIDDLE — rotated wordmark, fixed 28×140 box so it never clips */}
       <Link
         href="/"
         aria-label="Kiikio — home"
-        data-cursor="Kiikio"
-        className="flex-1 flex items-center justify-center w-full overflow-hidden"
+        data-cursor="Home"
+        className="relative block"
+        style={{ width: 28, height: 140 }}
       >
         <span
-          className="inline-block"
-          style={{ transform: "rotate(-90deg)", transformOrigin: "center" }}
+          className="absolute top-1/2 left-1/2 select-none"
+          style={{
+            transform: "translate(-50%, -50%) rotate(-90deg)",
+            transformOrigin: "center",
+            width: 140,
+            height: 28,
+          }}
         >
-          <LogoMark
-            variant="white"
-            layout="inline"
-            glitchOnIdle
+          <img
+            src="/kiikio-mark-white.png"
             alt="Kiikio"
-            width={170}
-            height={36}
-            className="opacity-90"
+            draggable={false}
+            className="w-full h-full object-contain opacity-85"
           />
         </span>
       </Link>
 
-      <div className="text-paper/55 leading-tight text-center">
-        CH
-        <br />
-        II
-      </div>
-    </div>
+      {/* BOTTOM — country / currency picker */}
+      <CountrySelector />
+    </aside>
   );
 }

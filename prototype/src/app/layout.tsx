@@ -8,8 +8,7 @@ import CartProvider from "@/components/CartProvider";
 import CartDrawer from "@/components/CartDrawer";
 import CustomCursor from "@/components/ui/CustomCursor";
 import BrandRail from "@/components/ui/BrandRail";
-import LightningFlash from "@/components/ui/LightningFlash";
-import LogoFilters from "@/components/ui/LogoFilters";
+import SideNav from "@/components/ui/SideNav";
 
 const display = Fraunces({
   subsets: ["latin"],
@@ -44,14 +43,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${display.variable} ${body.variable} ${tag.variable}`}>
       <body className="bg-ink text-paper font-body antialiased world-grain overflow-x-hidden">
         <CartProvider>
-          <LogoFilters />
           <SmoothScroll />
           <BrandRail />
+          <SideNav />
           <Header />
           <main className="min-h-screen md:pl-rail">{children}</main>
           <Footer />
           <CartDrawer />
-          <LightningFlash />
           <CustomCursor />
         </CartProvider>
       </body>

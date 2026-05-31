@@ -2,6 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
+import { useEffect } from "react";
 
 type Item = { label: string; href: string; meta?: string };
 
@@ -15,6 +16,14 @@ const items: Item[] = [
 
 const storm = [0.25, 1, 0.5, 1] as const;
 
+/**
+ * Side drawer menu.
+ *
+ * Slides in from the right as a fixed-width panel (full-width on mobile),
+ * paired with a tinted backdrop. Replaces the previous full-screen
+ * clip-path reveal which felt clunky and oversized. Typography is sized
+ * for editorial calm — no display-xl walls of text.
+ */
 export default function FullscreenMenu({
   open,
   onClose,
@@ -22,88 +31,115 @@ export default function FullscreenMenu({
   open: boolean;
   onClose: () => void;
 }) {
+  // Lock body scroll while the drawer is open.
+  useEffect(() => {
+    if (!open) return;
+    const prev = document.documentElement.style.overflow;
+    document.documentElement.style.overflow = "hidden";
+    return () => {
+      document.documentElement.style.overflow = prev;
+    };
+  }, [open]);
+
+  // Close on Escape.
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open, onClose]);
+
   return (
     <AnimatePresence>
       {open && (
-        <motion.div
-          initial={{ clipPath: "inset(0 0 100% 0)" }}
-          animate={{ clipPath: "inset(0 0 0% 0)" }}
-          exit={{ clipPath: "inset(0 0 100% 0)" }}
-          transition={{ duration: 0.95, ease: storm }}
-          className="fixed inset-0 z-[80] bg-ink text-paper overflow-hidden"
-        >
-          <div className="absolute inset-0 px-gutter pt-24 md:pt-32 pb-12 flex flex-col">
-            {/* top row */}
-            <div className="flex items-start justify-between">
-              <div className="font-tag text-tag-xs text-paper/55">
-                — Index
-                <br />
-                Choose a chapter
-              </div>
+        <>
+          {/* Backdrop */}
+          <motion.div
+            key="menu-backdrop"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4, ease: storm }}
+            onClick={onClose}
+            className="fixed inset-0 z-[78] bg-ink/70 backdrop-blur-[2px]"
+            aria-hidden
+          />
+
+          {/* Drawer */}
+          <motion.aside
+            key="menu-drawer"
+            initial={{ x: "100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "100%" }}
+            transition={{ duration: 0.6, ease: storm }}
+            className="fixed top-0 right-0 bottom-0 z-[80] w-full sm:w-[440px] md:w-[480px] bg-ink text-paper border-l border-paper/12 flex flex-col"
+            aria-label="Menu"
+          >
+            {/* Header */}
+            <div className="flex items-center justify-between px-7 md:px-8 h-16 md:h-20 border-b border-paper/10">
+              <div className="font-tag text-tag-xs text-paper/55">— Index</div>
               <button
                 onClick={onClose}
                 data-cursor="Close"
-                className="font-tag text-tag-xs text-paper/80 hover:text-paper"
+                className="font-tag text-tag-xs text-paper hover:text-paper/80 inline-flex items-center gap-2"
+                aria-label="Close menu"
               >
-                Close ✕
+                <span>Close</span>
+                <span aria-hidden className="relative inline-block w-3 h-3">
+                  <span className="absolute inset-0 m-auto h-px w-full bg-current rotate-45" />
+                  <span className="absolute inset-0 m-auto h-px w-full bg-current -rotate-45" />
+                </span>
               </button>
             </div>
 
-            {/* nav */}
-            <nav className="mt-12 md:mt-20 flex-1 flex flex-col gap-2 md:gap-3">
-              {items.map((it, i) => (
-                <motion.div
-                  key={it.href}
-                  initial={{ opacity: 0, y: 40 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, ease: storm, delay: 0.15 + i * 0.07 }}
-                  className="group"
-                >
-                  <Link
-                    href={it.href}
-                    onClick={onClose}
-                    data-cursor="Enter"
-                    className="grid grid-cols-12 items-baseline gap-6 border-b border-paper/15 py-4 md:py-6 hover:border-paper transition-colors duration-500 ease-[cubic-bezier(0.25,1,0.5,1)]"
+            {/* Nav list */}
+            <nav className="flex-1 overflow-y-auto px-7 md:px-8 py-8 md:py-10">
+              <ul className="flex flex-col">
+                {items.map((it, i) => (
+                  <motion.li
+                    key={it.href}
+                    initial={{ opacity: 0, x: 24 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.5, ease: storm, delay: 0.12 + i * 0.06 }}
                   >
-                    <span className="col-span-1 font-tag text-tag-xs text-paper/50">
-                      0{i + 1}
-                    </span>
-                    <span className="col-span-8 md:col-span-7 font-display text-[44px] md:text-[88px] leading-[0.92] tracking-[-0.035em]">
-                      {it.label}
-                    </span>
-                    <span className="col-span-3 md:col-span-4 font-tag text-tag-xs text-paper/50 text-right md:text-left">
-                      {it.meta}
-                    </span>
-                  </Link>
-                </motion.div>
-              ))}
+                    <Link
+                      href={it.href}
+                      onClick={onClose}
+                      data-cursor="Enter"
+                      className="group flex items-baseline justify-between gap-4 border-b border-paper/12 py-5 md:py-6 hover:border-paper transition-colors duration-500 ease-[cubic-bezier(0.25,1,0.5,1)]"
+                    >
+                      <span className="flex items-baseline gap-4">
+                        <span className="font-tag text-tag-xs text-paper/45 w-6">
+                          0{i + 1}
+                        </span>
+                        <span className="font-display text-[24px] md:text-[30px] leading-[1.06] tracking-[-0.025em] group-hover:text-dune transition-colors duration-500 ease-[cubic-bezier(0.25,1,0.5,1)]">
+                          {it.label}
+                        </span>
+                      </span>
+                      <span className="font-tag text-tag-xs text-paper/45 whitespace-nowrap">
+                        {it.meta}
+                      </span>
+                    </Link>
+                  </motion.li>
+                ))}
+              </ul>
             </nav>
 
-            {/* bottom row */}
-            <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-4 font-tag text-tag-xs text-paper/55">
+            {/* Footer block */}
+            <div className="border-t border-paper/10 px-7 md:px-8 py-6 grid grid-cols-2 gap-4 font-tag text-tag-xs text-paper/55">
               <div>
-                — Dispatch
-                <br />
-                <span className="text-paper/80">SS26 / Lightning</span>
+                <div className="text-paper/40">— Contact</div>
+                <div className="text-paper/85 mt-1">we@kiikio.com</div>
               </div>
               <div>
-                — Shipping
-                <br />
-                <span className="text-paper/80">Worldwide · 30-day returns</span>
-              </div>
-              <div>
-                — Contact
-                <br />
-                <span className="text-paper/80">we@kiikio.com</span>
-              </div>
-              <div>
-                — Social
-                <br />
-                <span className="text-paper/80">Instagram · TikTok</span>
+                <div className="text-paper/40">— Social</div>
+                <div className="text-paper/85 mt-1">Instagram · TikTok</div>
               </div>
             </div>
-          </div>
-        </motion.div>
+          </motion.aside>
+        </>
       )}
     </AnimatePresence>
   );
