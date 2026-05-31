@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import type { Product } from "@/lib/products";
 import { useCart } from "@/components/CartProvider";
 import Magnetic from "@/components/ui/Magnetic";
+import Price from "@/components/ui/Price";
 import { easing } from "@/lib/motion";
 
 type Props = { product: Product };
@@ -66,12 +67,13 @@ export default function ProductInfo({ product }: Props) {
 
           {/* Price block */}
           <div className="mt-6 flex items-baseline gap-4">
-            <span className="font-display text-[22px] md:text-[26px] tracking-[-0.015em]">
-              ${product.price}
-            </span>
-            {hasMember && (
+            <Price
+              usd={product.price}
+              className="font-display text-[22px] md:text-[26px] tracking-[-0.015em]"
+            />
+            {hasMember && product.memberPrice !== undefined && (
               <span className="font-tag text-tag-sm text-dune">
-                Member ${product.memberPrice}
+                Member <Price usd={product.memberPrice} />
               </span>
             )}
           </div>
@@ -143,7 +145,7 @@ export default function ProductInfo({ product }: Props) {
               data-cursor="Add to bag"
               className="btn-storm btn-storm--lg btn-storm--block justify-between"
             >
-              Add to bag — ${product.price}
+              Add to bag — <Price usd={product.price} />
               <span aria-hidden>→</span>
             </button>
           </Magnetic>
@@ -230,8 +232,10 @@ export default function ProductInfo({ product }: Props) {
                   {product.name}
                 </div>
                 <div className="font-tag text-tag-xs text-paper/55 truncate">
-                  {product.lot} · ${product.price}
-                  {hasMember && <span className="text-dune"> · Member ${product.memberPrice}</span>}
+                  {product.lot} · <Price usd={product.price} />
+                  {hasMember && product.memberPrice !== undefined && (
+                    <span className="text-dune"> · Member <Price usd={product.memberPrice} /></span>
+                  )}
                 </div>
               </div>
               <button

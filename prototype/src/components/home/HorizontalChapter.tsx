@@ -3,62 +3,64 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform, type MotionValue } from "framer-motion";
 import Link from "next/link";
-import LogoMark from "@/components/ui/LogoMark";
 import { products } from "@/lib/products";
+import Price from "@/components/ui/Price";
 
 /**
  * Scroll-pinned horizontal showcase.
  *
- * Each frame splits the viewport into a clean photo column (no overlay text)
- * and an editorial copy column on dark ground. The result: photography is
- * uninterrupted, all typography lives off-image on a quiet surface.
+ * The section opens with a quiet header (normal vertical scroll), then
+ * pins for the duration of the horizontal track. The horizontal track
+ * itself contains only product frames — no oversized title slab — so
+ * each scroll tick lands on a complete piece instead of revealing an
+ * empty intro panel.
+ *
+ * Each frame splits the viewport into a clean photo column (no overlay
+ * text) and an editorial copy column on dark ground.
  */
 export default function HorizontalChapter() {
+  const featured = products.filter((p) => p.chapter === "II").slice(0, 4);
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
 
-  // Inner track: 5 panels total (intro + 4 frames). Travel from 0 to -80%.
-  const x = useTransform(scrollYProgress, [0, 1], ["0%", "-80%"]);
-
-  const featured = products.filter((p) => p.chapter === "II").slice(0, 4);
+  // N frames at 100vw each → total track width 400vw.
+  // Slide from first to last: translateX 0 → -((N-1)/N) × 100% = -75% for 4 frames.
+  const N = featured.length;
+  const endPct = -(((N - 1) / N) * 100);
+  const x = useTransform(scrollYProgress, [0, 1], ["0%", `${endPct}%`]);
 
   return (
-    <section
-      ref={ref}
-      className="relative bg-ink text-paper overflow-clip"
-      style={{ height: "500vh" }}
-    >
-      <div className="sticky top-0 h-screen w-full overflow-hidden">
-        <motion.div style={{ x }} className="flex h-full w-[500%] will-change-transform">
-          {/* Frame 0 — Title slab */}
-          <div className="w-full h-full shrink-0 relative flex items-center px-gutter">
-            <div className="grid grid-cols-12 gap-8 w-full items-end">
-              <div className="col-span-12 md:col-span-8">
-                <div className="font-tag text-tag-xs text-paper/55 mb-6">— Reel / Chapter II</div>
-                <h2 className="font-display text-display-xl leading-[0.88] tracking-[-0.04em]">
-                  Lightning,
-                  <br />
-                  <em className="not-italic text-dune">read across.</em>
-                </h2>
-                <div className="mt-10 max-w-md">
-                  <LogoMark variant="white" layout="block" glitchOnIdle alt="Kiikio" className="opacity-90" />
-                </div>
-              </div>
-              <div className="col-span-12 md:col-span-3 md:col-start-10 self-end font-tag text-tag-xs text-paper/55 leading-relaxed">
-                <div>Scroll →</div>
-                <div className="text-paper/40 mt-2">
-                  {featured.length} panels — each piece is a still from the chapter reel.
-                </div>
-              </div>
-            </div>
-            <ProgressDots progress={scrollYProgress} count={featured.length + 1} />
+    <section className="relative bg-ink text-paper">
+      {/* Quiet header above the pinned track — keeps the title readable
+          without taking up a full panel inside the reel. */}
+      <div className="px-gutter pt-chapter pb-10 md:pb-14">
+        <div className="grid grid-cols-12 gap-8 items-end">
+          <div className="col-span-12 md:col-span-8">
+            <div className="font-tag text-tag-xs text-paper/55 mb-5">— Reel / Chapter II</div>
+            <h2 className="font-display text-[clamp(32px,4.6vw,60px)] leading-[0.96] tracking-[-0.03em] max-w-[18ch]">
+              Lightning,{" "}
+              <em className="not-italic text-dune">read across.</em>
+            </h2>
           </div>
+          <div className="col-span-12 md:col-span-3 md:col-start-10 self-end font-tag text-tag-xs text-paper/55 leading-relaxed md:text-right">
+            <div className="text-paper/85">Scroll →</div>
+            <div className="text-paper/40 mt-2">
+              {N} frames — each a still from the chapter reel.
+            </div>
+          </div>
+        </div>
+      </div>
 
-          {/* Frames 1..N — Featured pieces (split layout, no text on photo) */}
-          {featured.map((p, i) => (
-            <Frame key={p.slug} product={p} index={i + 1} />
-          ))}
-        </motion.div>
+      {/* Pinned horizontal track */}
+      <div ref={ref} className="relative overflow-clip" style={{ height: `${N * 100}vh` }}>
+        <div className="sticky top-0 h-screen w-full overflow-hidden">
+          <motion.div style={{ x }} className="flex h-full will-change-transform">
+            {featured.map((p, i) => (
+              <Frame key={p.slug} product={p} index={i + 1} />
+            ))}
+          </motion.div>
+          <ProgressDots progress={scrollYProgress} count={N} />
+        </div>
       </div>
     </section>
   );
@@ -72,19 +74,20 @@ function Frame({
   index: number;
 }) {
   return (
-    <div className="w-full h-full shrink-0 relative grid grid-cols-12 bg-ink">
+    <div className="min-w-full h-full shrink-0 relative grid grid-cols-12 bg-ink">
       {/* LEFT — clean photography column, no text overlays */}
       <div className="col-span-12 md:col-span-7 relative h-[60svh] md:h-full bg-storm overflow-hidden">
         <img
           src={product.hero}
           alt={product.name}
+          loading="lazy"
           className="absolute inset-0 w-full h-full object-cover"
         />
-        {/* Subtle bottom shade only — kept narrow so the photo reads clean */}
+        {/* Narrow bottom shade only — keeps the photo reading clean */}
         <div className="absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-ink/55 to-transparent pointer-events-none" />
       </div>
 
-      {/* RIGHT — typographic column on quiet ground (text lives here, not on photo) */}
+      {/* RIGHT — typographic column on quiet ground */}
       <div className="col-span-12 md:col-span-5 relative flex flex-col justify-between px-gutter py-12 md:py-16 bg-ink">
         <div className="flex items-start justify-between font-tag text-tag-xs text-paper/65">
           <div className="leading-relaxed">
@@ -98,7 +101,7 @@ function Frame({
         </div>
 
         <div className="mt-auto">
-          <h3 className="font-display text-[clamp(28px,3.2vw,52px)] leading-[1.02] tracking-[-0.025em] max-w-[14ch]">
+          <h3 className="font-display text-[clamp(26px,2.8vw,44px)] leading-[1.02] tracking-[-0.025em] max-w-[14ch]">
             {product.name}
           </h3>
           <p className="mt-5 font-body text-paper/70 text-[14.5px] leading-relaxed max-w-[34ch]">
@@ -110,7 +113,7 @@ function Frame({
               data-cursor="View piece"
               className="btn-storm"
             >
-              View piece — ${product.price}
+              View piece — <Price usd={product.price} />
               <span aria-hidden>→</span>
             </Link>
             <span className="font-tag text-tag-xs text-paper/55">
@@ -124,16 +127,21 @@ function Frame({
 }
 
 function ProgressDots({ progress, count }: { progress: MotionValue<number>; count: number }) {
+  // Tiny visual rail at the bottom indicating which frame is in view.
+  const width = useTransform(progress, [0, 1], ["0%", "100%"]);
   return (
-    <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-3 z-10">
+    <div
+      aria-hidden
+      className="pointer-events-none absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-3"
+    >
       {Array.from({ length: count }).map((_, i) => (
-        <Dot key={i} progress={progress} start={i / count} end={(i + 1) / count} />
+        <div key={i} className="h-px w-10 bg-paper/15 relative overflow-hidden">
+          <motion.div
+            style={{ width: i === 0 ? width : "0%" }}
+            className="h-full bg-paper/75 absolute left-0 top-0"
+          />
+        </div>
       ))}
     </div>
   );
-}
-
-function Dot({ progress, start, end }: { progress: MotionValue<number>; start: number; end: number }) {
-  const opacity = useTransform(progress, [start, end], [0.25, 1]);
-  return <motion.span style={{ opacity }} className="w-6 h-px bg-paper" />;
 }

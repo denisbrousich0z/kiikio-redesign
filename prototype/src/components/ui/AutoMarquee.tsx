@@ -49,8 +49,8 @@ export default function AutoMarquee({
   // Restrained editorial scale — no oversized type.
   const headlineSize =
     size === "lg"
-      ? "text-[clamp(28px,4.4vw,64px)] tracking-[-0.035em] leading-[1.06]"
-      : "text-[clamp(18px,2.4vw,36px)] tracking-[-0.025em] leading-[1.1]";
+      ? "text-[clamp(20px,3vw,42px)] tracking-[-0.03em] leading-[1.08]"
+      : "text-[clamp(14px,1.8vw,26px)] tracking-[-0.02em] leading-[1.12]";
 
   const secondaryStyle: CSSProperties & Record<string, string | number> = {
     "--marquee-duration": `${duration}s`,
@@ -70,14 +70,14 @@ export default function AutoMarquee({
 
   return (
     <div className={`relative bg-ink text-paper border-y border-paper/12 ${className}`}>
-      <div className={`auto-marquee py-3 md:py-4 font-display ${headlineSize}`} style={style}>
+      <div className={`auto-marquee py-2 md:py-2.5 font-display ${headlineSize}`} style={style}>
         <div className="auto-marquee__track">
           <Block text={text} divider={dividerNode} />
           <Block text={text} divider={dividerNode} aria-hidden />
         </div>
       </div>
       {secondaryRow && (
-        <div className="border-t border-paper/8 py-2.5 md:py-3 font-tag text-[10.5px] tracking-[0.28em] text-paper/55">
+        <div className="border-t border-paper/8 py-2 md:py-2.5 font-tag text-[9.5px] tracking-[0.28em] text-paper/55">
           {secondaryRow}
         </div>
       )}

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import type { Product, ProductBadge } from "@/lib/products";
+import Price from "@/components/ui/Price";
 
 type Props = {
   product: Product;
@@ -90,9 +91,11 @@ export default function ProductCard({ product, index = 0, priority }: Props) {
 function PricePair({ price, member }: { price: number; member?: number }) {
   return (
     <div className="text-right font-tag text-tag-sm text-paper whitespace-nowrap leading-tight">
-      <div>${price}</div>
+      <Price usd={price} />
       {member !== undefined && member < price && (
-        <div className="text-[10px] text-dune/90 leading-snug">Member ${member}</div>
+        <div className="text-[10px] text-dune/90 leading-snug">
+          Member <Price usd={member} />
+        </div>
       )}
     </div>
   );

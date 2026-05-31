@@ -25,7 +25,7 @@ export default function SideNav() {
   return (
     <nav
       aria-label="Primary"
-      className="hidden md:flex fixed top-20 left-[72px] z-50 flex-col gap-2.5 pointer-events-auto"
+      className="hidden md:flex fixed top-24 left-[80px] z-50 flex-col gap-3.5 pointer-events-auto"
     >
       {links.map((l) => {
         const active =
@@ -38,10 +38,10 @@ export default function SideNav() {
             href={l.href}
             data-cursor={l.label}
             className={[
-              "font-tag text-tag-xs uppercase tracking-[0.22em] transition-colors duration-300",
+              "font-tag text-[13px] leading-none uppercase tracking-[0.18em] transition-colors duration-300",
               active
                 ? "text-paper"
-                : "text-paper/65 hover:text-paper",
+                : "text-paper/85 hover:text-paper",
             ].join(" ")}
           >
             {l.label}

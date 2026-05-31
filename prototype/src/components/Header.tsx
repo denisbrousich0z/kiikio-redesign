@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { easing } from "@/lib/motion";
 import { useCart } from "@/components/CartProvider";
 import FullscreenMenu from "@/components/ui/FullscreenMenu";
+import SearchOverlay from "@/components/ui/SearchOverlay";
 
 /**
  * Header is now intentionally minimal — on desktop the primary nav
@@ -16,10 +17,13 @@ import FullscreenMenu from "@/components/ui/FullscreenMenu";
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const { count, setOpen: setCartOpen } = useCart();
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
+    // Threshold raised: the blur backdrop only kicks in once content starts
+    // to actually slide under the header — keeps the hero clean above the fold.
+    const onScroll = () => setScrolled(window.scrollY > 80);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -42,8 +46,9 @@ export default function Header() {
             <button
               type="button"
               aria-label="Search"
+              onClick={() => setSearchOpen(true)}
               data-cursor="Search"
-              className="hidden md:inline-flex font-tag text-tag-xs text-paper/75 hover:text-paper"
+              className="inline-flex font-tag text-tag-xs text-paper/75 hover:text-paper"
             >
               Search
             </button>
@@ -77,6 +82,7 @@ export default function Header() {
       </motion.header>
 
       <FullscreenMenu open={menuOpen} onClose={() => setMenuOpen(false)} />
+      <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
     </>
   );
 }
