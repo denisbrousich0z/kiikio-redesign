@@ -4,10 +4,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 /**
- * Desktop-only stacked navigation pinned to the top-left of the viewport
- * (just to the right of the 56px BrandRail). Replaces the old MENU
- * button — primary nav is now permanently visible on desktop instead of
- * hidden behind a hamburger.
+ * Desktop-only stacked navigation anchored to the top-left of the
+ * document (just to the right of the 56px BrandRail). It is positioned
+ * `absolute` rather than `fixed` so it lives with the first block of
+ * the page — as the user scrolls down, the menu scrolls up with the
+ * hero and disappears, instead of trailing the user across every
+ * section.
  *
  * Mobile: hidden; users tap the hamburger in Header to open FullscreenMenu.
  */
@@ -25,7 +27,7 @@ export default function SideNav() {
   return (
     <nav
       aria-label="Primary"
-      className="hidden md:flex fixed top-24 left-[80px] z-50 flex-col gap-3.5 pointer-events-auto"
+      className="hidden md:flex absolute top-24 left-[80px] z-30 flex-col gap-3.5 pointer-events-auto"
     >
       {links.map((l) => {
         const active =

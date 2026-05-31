@@ -31,22 +31,20 @@ export default function HorizontalChapter() {
 
   return (
     <section className="relative bg-ink text-paper">
-      {/* Quiet header above the pinned track — keeps the title readable
-          without taking up a full panel inside the reel. */}
-      <div className="px-gutter pt-chapter pb-10 md:pb-14">
-        <div className="grid grid-cols-12 gap-8 items-end">
-          <div className="col-span-12 md:col-span-8">
-            <div className="font-tag text-tag-xs text-paper/55 mb-5">— Reel / Chapter II</div>
-            <h2 className="font-display text-[clamp(32px,4.6vw,60px)] leading-[0.96] tracking-[-0.03em] max-w-[18ch]">
+      {/* Quiet header above the pinned track — compact, adaptive,
+          stays out of the way of the actual reel. */}
+      <div className="px-gutter pt-20 md:pt-24 pb-6 md:pb-8">
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+          <div>
+            <div className="font-tag text-tag-xs text-paper/55 mb-2.5">— Reel · Chapter II</div>
+            <h2 className="font-display text-[clamp(22px,2.6vw,38px)] leading-[1.05] tracking-[-0.02em] max-w-[22ch]">
               Lightning,{" "}
               <em className="not-italic text-dune">read across.</em>
             </h2>
           </div>
-          <div className="col-span-12 md:col-span-3 md:col-start-10 self-end font-tag text-tag-xs text-paper/55 leading-relaxed md:text-right">
-            <div className="text-paper/85">Scroll →</div>
-            <div className="text-paper/40 mt-2">
-              {N} frames — each a still from the chapter reel.
-            </div>
+          <div className="font-tag text-tag-xs text-paper/55 leading-relaxed md:text-right">
+            <span className="text-paper/85">Scroll →</span>
+            <span className="hidden md:inline text-paper/40"> · {N} frames</span>
           </div>
         </div>
       </div>
